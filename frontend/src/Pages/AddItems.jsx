@@ -1,17 +1,19 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { BsCrosshair } from 'react-icons/bs'
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaTimes } from 'react-icons/fa'
 import { RiCloseLine } from 'react-icons/ri'
 import { Link, useNavigate } from 'react-router-dom'
+import {TailSpin} from "react-loader-spinner"
+import swal from "sweetalert"
 
 const AddItems = () => {
     const navigate = useNavigate()
-    const [sizes, setSizes]=useState([])
-    const [sizeInput, setSizeInput]=useState({size:"",price:""})
+    const [variants, setVariants]=useState([])
+    const [variantInput, setVariantInput]=useState({variant:"",price:""})
     const [category, setCategory]=useState([])
     const [fileInput, setFileInput] = useState()
     const [formInput, setFormInput]=useState({})
+    const [loading, setLoading] = useState(false)
 
 
     const handleChange = (e)=>{
@@ -27,33 +29,50 @@ const AddItems = () => {
     
 
     const submitHandler = async ()=>{
+        setLoading(true)
         const formData = new FormData()
         formData.append("photo", fileInput)
         formData.append("itemId", formInput.itemId)
         formData.append("itemName", formInput.itemName)
         formData.append("category", formInput.category)
 
-        formInput.sizes.forEach(item=>{
-            formData.append("sizes[]",JSON.stringify(item))
+        formInput.variants.forEach(item=>{
+            formData.append("variants[]",JSON.stringify(item))
         })
         
         for( let data of formData){
             console.log(data[0],data[1]);
         }
+        console.log(formData);
         const res = await axios.post("/api/v1/products/add-items",formData,{headers:{Authorization: localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
         console.log(res.data);
+        setLoading(false)
+        if(res.data.statusCode===201){
+            swal({
+                title:"Added!",
+                icon: "success",
+                text:"Your item has been added successfully"
+            }).then(()=>{
+                navigate("/items")
+            })
+        }
 
     }
 
     const addButtonHandler = () =>{
-        setSizes((prev)=>([...prev, sizeInput]));
-        setSizeInput({size:"",price:""});
+        setVariants((prev)=>([...prev, variantInput]));
+        setVariantInput({variant:"",price:""});
+        
+        
+    }
+    const removeButtonHandler = (itemVariant) =>{
+        setVariants((prev)=>(prev.filter((item)=>item.variant!==itemVariant)));
         
         
     }
     useEffect(() => {
-        setFormInput((data)=>({...data, sizes:sizes}))
-    }, [sizes]);
+        setFormInput((data)=>({...data, variants:variants}))
+    }, [variants]);
     useEffect(() => {
         const getCategory = async() =>{
             const res = await axios.get("/api/v1/products/get-category",{headers:{Authorization:localStorage.getItem("AccessToken")}})
@@ -86,20 +105,21 @@ const AddItems = () => {
 
                     
                     <div className='flex w-full justify-between items-center'>
-                            <input value={sizeInput.size} onChange={(e)=>setSizeInput((prev)=>({...prev, size:e.target.value}))} type="text" placeholder='Size' className='p-2 w-/12  border rounded-lg'/>
-                            <input value={sizeInput.price}  onChange={(e)=>setSizeInput((prev)=>({...prev, price:e.target.value }))}  type="number" placeholder=' Price' className='p-2 w-5/12 border rounded-lg'/>
+                            <input value={variantInput.variant} onChange={(e)=>setVariantInput((prev)=>({...prev, variant:e.target.value}))} type="text" placeholder='variant' className='p-2 w-/12  border rounded-lg'/>
+                            <input value={variantInput.price}  onChange={(e)=>setVariantInput((prev)=>({...prev, price:e.target.value }))}  type="number" placeholder=' Price' className='p-2 w-5/12 border rounded-lg'/>
                             <FaPlus  className='text-black'  onClick={addButtonHandler}/>
 
                     </div>
-                    {sizes.map((size)=>(
-                        <div key={size.size}>
-                        <input value={size.size} disabled type="text" placeholder='Size' className='p-2 w-/12  border rounded-lg'/>
-                        <input value={size.price} disabled  type="number" placeholder='Full Price' className='p-2 w-5/12 border rounded-lg'/>
+                    {variants.map((variant)=>(
+                        <div className='w-full flex justify-center gap-2 items-center' key={variant.variant}>
+                        <input value={variant.variant} disabled type="text" placeholder='variant' className='p-2 w-/12  border rounded-lg'/>
+                        <input value={variant.price} disabled  type="number" placeholder='Full Price' className='p-2 w-5/12 border rounded-lg'/>
+                        <FaPlus onClick={()=>{removeButtonHandler(variant.variant)}} className='rotate-45'/>
                         </div>
                     ))}
                     <label htmlFor="title">Image</label>
                     <input onChange={handleFile}  type="file" className='' name='photo' />
-                    <input type="button" value="Submit" onClick={submitHandler} className='bg-orange-400 w-28 color hover:bg-orange-500 text-white rounded-xl h-8 font-semibold ' />
+                    <button type="button"  onClick={submitHandler} className='bg-orange-400 w-28 flex justify-center items-center color hover:bg-orange-500 text-white rounded-xl h-8 font-semibold ' >{loading?<TailSpin color='white' width={20} strokeWidth={3} height={20}/>:"Submit"}</button>
                 </form>
                 <div className='text-blue-500 font-semibold p-3'><Link to={'add-new-category'} >Add a new Category ?</Link></div>
             </div>

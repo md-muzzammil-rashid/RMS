@@ -1,6 +1,46 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
+import autoIncrement from "mongoose-auto-increment"
+
+const orderSchema = new mongoose.Schema({
+    customerName:{
+        type:String,
+        required: true,
+    },
+    customerContact:{
+        type:Number,
+    },
+    subTotal:{
+        type:Number
+    },
+    tax:{
+        type:Number
+    },
+    total:{
+        type:Number
+    },
+    discountAmount:{
+        type:Number
+    },
+    items:{
+        type:Array
+    },
+    orderIdAuto:{
+        type:Number
+    }
+}, {timestamps:true})
+
+// const connection = mongoose.createConnection(`${process.env.MONGODB_URL}/${process.env.DB_NAME}`)
+// autoIncrement.initialize(connection)
+
+// orderSchema.plugin(autoIncrement.plugin, {
+//     model:"Users",
+//     field: "orderIdAuto",
+//     startAt: 10001,
+//     incrementBy: 1
+// })
+
 
 
 const itemsSchema = new mongoose.Schema({
@@ -19,8 +59,8 @@ const itemsSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    sizes:[{
-        size:{type:String},
+    variants:[{
+        variant:{type:String},
         price:{type:Number}
     }],
     description: {
@@ -28,7 +68,7 @@ const itemsSchema = new mongoose.Schema({
     },
     category: {
         type: String
-    },
+    }
 })
 
 const userSchema = new mongoose.Schema({
@@ -66,6 +106,9 @@ const userSchema = new mongoose.Schema({
     productCategory: [{
         category: { type: String, required: true },
         categoryImage: { type: String, required: true }
+    }],
+    orders:[{
+        type:orderSchema
     }]
 
 })

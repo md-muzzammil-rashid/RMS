@@ -6,6 +6,7 @@ import { GiWallet } from "react-icons/gi";
 import { RiTodoFill } from "react-icons/ri";
 import Logo from "../Assets/images/logo.png"
 import { Link, NavLink } from 'react-router-dom';
+import { FaWarehouse} from "react-icons/fa"
 
 
 
@@ -21,9 +22,10 @@ const Navbar = () => {
     }
 
     return (
-        <div style={{backgroundColor:"#2d2c2d"}} className= '  flex-col p-8 gap-10 fixed top-0 left-0 text-white h-screen flex w-72 box-border z-10'>
+        <div style={{backgroundColor:"#000000"}} className= '  flex-col p-8 gap-10 fixed top-0 left-0 text-white h-screen flex w-72 box-border z-10'>
             <div>
                 <img src={Logo} alt="" />
+                <h2 className='uppercase font-bold m-2 text-xl'>Popeyes Kitchen</h2>
             </div>
             <div className='ml-5 text-xl'>
                 <ul className='gap-y-5 flex flex-col'>
@@ -46,6 +48,11 @@ const Navbar = () => {
                     <li className='flex gap-2 items-center justify-start'>
                         <NavLink to={'/sales'} style={navLinkStyle} className=' hover:bg-white hover:bg-opacity-15  w-48 py-2 rounded-lg px-3  bg-opacity-30 flex gap-2 items-center justify-start'>
                             <GiWallet /> Sales
+                        </NavLink>
+                    </li>
+                    <li className='flex gap-2 items-center justify-start'>
+                        <NavLink to={'/inventory'} style={navLinkStyle} className=' hover:bg-white hover:bg-opacity-15  w-48 py-2 rounded-lg px-3  bg-opacity-30 flex gap-2 items-center justify-start'>
+                            < FaWarehouse/> Inventory
                         </NavLink>
                     </li>
                     <li className='flex gap-2 items-center justify-start'>

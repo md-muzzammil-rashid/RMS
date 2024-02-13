@@ -10,6 +10,9 @@ import AddCategory from './Pages/AddCategory';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import Layout from './Components/Layout';
+import OrderSummery from './Pages/OrderSummery';
+import OrderHistory from './Pages/OrderHistory';
+import EditPage from './Pages/EditPage';
 
 function App() {
   return (
@@ -21,14 +24,18 @@ function App() {
           <Route path='/signup' element={<Signup />} />
 
           {/* Introduce a layout component for common elements */}
+
           <Route element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path='/orders' element={<Order />} />
+            <Route path='/order-history' element={<OrderHistory />} />
+            <Route path='/order-summery/:orderId' element={<OrderSummery />} />
             <Route path='/items'>
               <Route index element={<ItemsPage />} />
               <Route path='check-out' element={<Checkout />} />
               <Route path='add' element={<AddItems />} />
               <Route path='add/add-new-category' element={<AddCategory />} />
+              <Route path='edit/:id' element={<EditPage/>}/>
             </Route>
           </Route>
         </Routes>

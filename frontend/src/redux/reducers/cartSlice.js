@@ -5,29 +5,29 @@ const cartSlice = createSlice({
     initialState:{product:[],total:0},
     reducers:{
         addItems:(state, action)=>{
-           const existedProduct =  state.product.find((item)=>item.id  == action.payload.id)
+           const existedProduct =  state.product.find((item)=>item.id  === action.payload.id && item.variants.variant === action.payload.variants.variant)
            if(!existedProduct){
-                const {name, id, image, selectedPrice} = action.payload
-                const data = {name, id, selectedPrice, image, quantity:1}
+                const {name, itemId, image, variants} = action.payload
+                const data = {name, itemId, image, quantity:1, variants}
                state.product.push(data)
            }else{
             existedProduct.quantity =  existedProduct.quantity+1;
            }
            
            state.total = state.product.map((item)=>{
-            return (item.selectedPrice*item.quantity);
+            return (item.variants.price*item.quantity);
            })
         },
         removeItems:(state, action)=>{
-            const existedProduct = state.product.find((item)=>item.id == action.payload)
+            const existedProduct = state.product.find((item)=>item.itemId === action.payload.itemId && item.variants.variant === action.payload.variants.variant)
             if(!existedProduct)return;
             if(existedProduct.quantity >1){
                 existedProduct.quantity = existedProduct.quantity - 1;
             }else{
-                state.product = state.product.filter((item)=> item.id != action.payload)
+                state.product = state.product.filter((item)=> item.itemid !== action.payload.itemId && item.variants.variant !== action.payload.variants.variant)
             }
             state.total = state.product.map((item)=>{
-                return (item.selectedPrice*item.quantity);
+                return (item.variants.price*item.quantity);
                })
             
         },

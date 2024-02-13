@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCategory, addItems, getCategories, getItems } from "../controllers/products.controllers.js";
+import { addCategory, addItems, editItemDetail, getCategories, getItemDetail, getItems } from "../controllers/products.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -16,4 +16,9 @@ router.route('/get-category')
 
 router.route('/get-items')
     .get(verifyJWT, getItems)
+
+router.route('/edit')
+    .get(verifyJWT, getItemDetail)
+    .post(upload.single(''),verifyJWT, editItemDetail)
+
  export default router

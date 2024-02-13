@@ -1,25 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../Components/Navbar'
+import React, { useEffect, useReducer, useState } from 'react'
 import ItemCard from '../Components/ItemCard'
-import { foods } from '../utils/food'
 import ItemPageNav from '../Components/ItemPageNav'
 import axios from 'axios'
+import { fetchItems, getItem } from '../redux/reducers/itemSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const ItemsPage = () => {
   const [category, setCategory] = useState([])
+  const dispatch = useDispatch()
+  const itemState = useSelector((state)=>state.items)
+  const searchItemState = useSelector(state=>state.items.searchItems)
+  const searchQueryState = useSelector(state=>state.items.searchQuery)
   useEffect(() => {
     const getCategory = async () => {
       const res = await axios.get("/api/v1/products/get-category", { headers: { Authorization: localStorage.getItem("AccessToken") } })
-      console.log(res.data.data)
       setCategory(res.data.data)
     }
     getCategory()
+
+    dispatch(fetchItems())
+
   }, []);
   return (
     <div className='w-full pl-72'>
       <ItemPageNav />
       <div className='w-full flex gap-2 m-2'>
-            <div className='flex border justify-center items-center text-center rounded-xl gap-2 pr-2 overflow-hidden ' >
+            <div  onClick={()=>dispatch(getItem("All"))}  className={`flex border cursor-pointer justify-center items-center rounded-xl gap-2 pr-2 overflow-hidden ${"All" === itemState.selectedCategory ?"bg-orange-400 bg-opacity-25":" "} `}  >
               {/* <div className='w-14 h-14' >
                 <img src='' alt="" className='rounded-xl aspect-square object-cover ' />
               </div> */}
@@ -27,7 +33,7 @@ const ItemsPage = () => {
             </div>
         {
           category.map((cat) => (
-            <div className='flex border justify-center items-center rounded-xl gap-2 pr-2 overflow-hidden ' key={cat.category}>
+            <div  onClick={()=>dispatch(getItem(cat.category))} className={`flex border cursor-pointer justify-center items-center rounded-xl gap-2 pr-2 overflow-hidden ${cat.category === itemState.selectedCategory ?"bg-orange-300 bg-opacity-25":" "} `} key={cat.category}>
               <div className='w-14 h-14' >
                 <img src={cat.categoryImage} alt="" className='rounded-xl aspect-square object-cover ' />
               </div>
@@ -37,13 +43,21 @@ const ItemsPage = () => {
         }
       </div>
       <div className='gap-y-8 p-8 flex flex-wrap justify-center gap-6 m-auto w-full '>
-        {foods.map((food) => 
+
+        {searchQueryState===''?
+        itemState.displayProducts.map((food) => 
         {
-          console.log(food.sizes);
           return(
-          <ItemCard key={food._id} name={food.itemName} price={food.price} sizes={food.sizes} image={food.photo} id={food._id} />
+          <ItemCard key={food._id} name={food.itemName} uid={food._id}  price={food.price} variants={food.variants} image={food.photo} itemId={food.itemId} />
         )}
-        )}
+        ):
+        searchItemState.map((food)=>{
+          return(
+            <ItemCard key={food._id} name={food.itemName} uid={food._id} price={food.price} variants={food.variants} image={food.photo} itemId={food.itemId} />
+          
+        )
+        })
+      }
 
       </div>
     </div>

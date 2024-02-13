@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addItems, removeItems } from '../redux/reducers/cartSlice';
-import { FaArrowLeft, FaBackward } from 'react-icons/fa';
+import { addItems, clearItems, removeItems } from '../redux/reducers/cartSlice';
+import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {TailSpin} from "react-loader-spinner"
 
 const Checkout = () => {
   const navigate = useNavigate()
@@ -12,15 +14,43 @@ const Checkout = () => {
   const total = products.total? Math.round((products.total.reduce((accumulator, currentValue) => accumulator + currentValue, 0))): 0;
   const subTotal = Math.round(total/(1+.05))
   const discountAmt = Math.round((discount/100) *total * 1)
-  const handleDecrement = (id) => {
+  const [loading, setLoading] = useState(false)
+  const [data, setData]=useState({items:products.product,customerName:"", customerContact:"",tax:total-subTotal, discountAmount:discountAmt,subTotal, total})
 
-    dispatch(removeItems(id))
+  const handleDecrement = (item) => {
+    dispatch(removeItems(item))
   };
 
-  const handleIncrement = (id) => {
-    const obj = { id }
-    dispatch(addItems(obj))
+  const handleIncrement = (item) => {
+    dispatch(addItems(item))
+  };
+  const formInputHandler = (e) =>{
+    const name = e.target.name;
+    const value = e.target.value
+    setData((prev)=>({...prev, [name]:value}))
   }
+
+  useEffect(()=>{
+    setData((prev)=>({...prev, discountAmount:discountAmt, items:products.product, tax:total-subTotal, subTotal:subTotal, total:total-discountAmt}))
+
+  },[discount, products])
+
+  const submitFormHandler =async (e) =>{
+    e.preventDefault()
+    setLoading(true)
+    const res =await axios.post("/api/v1/orders/submit-order", data , { headers:{Authorization:localStorage.getItem("AccessToken")}} )
+    // console.log(res);
+    setLoading(false)
+    if(res.data.statusCode==201){
+      const data = res.data.data.orders
+      const orderId = data[data.length-1]
+      dispatch(clearItems())
+      navigate(`/order-summery/${orderId._id}`)
+    }
+    
+  }
+
+
 
 
   return (
@@ -43,32 +73,32 @@ const Checkout = () => {
           </div>
           {products.product.map((item) => (
             <div key={item.id} className='flex items-center bg-white justify-between gap-4' >
-              <div className=' h-24 overflow-hidden'>
-                <img src={item.image} alt="" className='object-center  object-fill h-24 w-24 p-2 rounded-3xl' />
+              <div className=' h-24 overflow-hidden flex-shrink-0'>
+                <img src={item.image} alt="" className='object-center aspect-square  object-fill h-24 w-24 p-2 rounded-3xl' />
               </div>
               <div className='flex-grow'>
                 <h2 className='text-start'>
-                  {item.name}
+                  {item.name} : {item.variants.variant}
                 </h2>
               </div>
-              <div className='flex-shrink w-44'>
-                &#8377;{item.selectedPrice} &times; {item.quantity}
+              <div className='flex-shrink-0 w-44'>
+                &#8377;{item.variants.price} &times; {item.quantity}
               </div>
 
               <div className='border flex-shrink-0  border-orange-600 flex rounded-lg cursor-pointer overflow-hidden font-semibold'>
-                <div onClick={() => handleDecrement(item.id)} className='w-8 bg-orange-600 text-white'>-</div>
+                <div onClick={() => handleDecrement(item)} className='w-8 bg-orange-600 text-white'>-</div>
                 <div className='w-8 text-orange-600'>{item.quantity}</div>
-                <div onClick={() => handleIncrement(item.id)} className='w-8 bg-orange-600 text-white'>+</div>
+                <div onClick={() => handleIncrement(item)} className='w-8 bg-orange-600 text-white'>+</div>
               </div>
 
               <div className='w-44 bg-green-50 flex-shrink-0'>
-                &#8377;{item.quantity * item.selectedPrice}
+                &#8377;{item.quantity * item.variants.price}
               </div>
 
             </div>
           ))}
         </div>
-        <div className='w-1/3 bg-white min-h-full '>
+        <div className='w-1/3 bg-white min-h-full  '>
           <div className='bg-zinc-100  m-10 rounded-xl p-5 border border-zinc-200'>
             <h2 className='font-semibold text-2xl'>Amount</h2>
             <div className='flex justify-around'>
@@ -91,12 +121,12 @@ const Checkout = () => {
               <h2 className='font-semibold text-3xl'>Customer Details</h2>
               <form action="" className='flex flex-col text-start gap-2 m-8 p-6'>
                 <label htmlFor="customerName">Name</label>
-                <input type="text" name='customerName' id='customerName' className=' p-2 border-2 border-zinc-700 rounded-lg' />
+                <input onChange={formInputHandler} type="text" name='customerName' id='customerName' className=' p-2 border-2 border-zinc-700 rounded-lg' />
                 <label htmlFor="phoneNumber">Phone Number</label>
-                <input type="text" name='phoneNumber' id='phoneNumber' className=' p-2 border-2 border-zinc-700 rounded-lg' />
+                <input onChange={formInputHandler}  type="text" name='customerContact' id='phoneNumber' className=' p-2 border-2 border-zinc-700 rounded-lg' />
                 <label htmlFor="discount">Discount (%)</label>
                 <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} name='discount' id='discount' className=' p-2 border-2 border-zinc-700 rounded-lg' />
-                <button className='bg-orange-400 w-28 color hover:bg-orange-500 text-white rounded-xl h-8 font-semibold '>Confirm</button>
+                <button onClick={submitFormHandler} className='bg-orange-400 w-28 color hover:bg-orange-500 text-white rounded-xl h-8 font-semibold flex justify-center items-center '>{loading?<TailSpin height={20} color='white' />: "Confirm"}</button>
               </form>
             </div>
           </div>

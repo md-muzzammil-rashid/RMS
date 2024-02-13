@@ -37,7 +37,7 @@ const AddCategory = () => {
         const res = await axios.post("/api/v1/products/add-category",formData, {headers:{Authorization:localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
         console.log(res.data);
         setLoading(false)
-        if(res.data.statusCode===202){
+        if(res.data.statusCode===201){
             swal({
                 title:"Added!",
                 icon: "success",

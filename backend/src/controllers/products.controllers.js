@@ -18,9 +18,9 @@ const addCategory = asyncHandler(async (req, res, next)=>{
     user.productCategory.push({categoryImage, category})    
     await user.save({validateBeforeSave:false})  
     
-    return res.status(200)
+    return res.status(201)
         .json(
-            new ApiResponse(202, "Uploaded successfully")
+            new ApiResponse(201, "Uploaded successfully")
         )
 })
 
@@ -35,18 +35,18 @@ const getCategories = asyncHandler(async(req,res,next)=>{
 
 const addItems = asyncHandler(async(req,res)=>{
     const user = await UsersModel.findById(req.user._id)
-    const {category, itemId, itemName, photo, sizes} = req.body
-    const sizesJSON=[];
-    sizes.forEach(item=>{
-        sizesJSON.push(JSON.parse(item))
+    const {category, itemId, itemName, photo, variants} = req.body
+    const variantsJSON=[];
+    variants.forEach(item=>{
+        variantsJSON.push(JSON.parse(item))
     })
     
     const itemImg = await uploadOnCloudinary(req.file.path)
     const itemImgLink = itemImg.url
-    user.items.push({category, itemId, itemName, sizes:sizesJSON, photo:itemImgLink})
+    user.items.push({category, itemId, itemName, variants:variantsJSON, photo:itemImgLink})
     await user.save({validateBeforeSave:false})
-    return res.status(200)
-        .json(new ApiResponse(200,"Added", {}))
+    return res.status(201)
+        .json(new ApiResponse(201,"Added", {}))
 })
 
 const getItems = asyncHandler(async(req, res, next)=>{
@@ -60,9 +60,54 @@ const getItems = asyncHandler(async(req, res, next)=>{
         )
 })
 
+const getItemDetail = asyncHandler(async (req, res, next)=>{
+    const {id} = req.query
+    console.log(id);
+    const item = await UsersModel.findOne({_id:req.user._id ,'items._id':id},{'items.$':1})
+    if(!item){
+        throw new ApiError(404, 'Item not Found')
+    }
+    res.status(200)
+        .json(
+            new ApiResponse(200, 'Item get Successful', item.items[0])
+        )
+
+})
+
+const editItemDetail = asyncHandler(async (req, res, next)=>{
+    const {id} = req.query
+    const {itemName, itemId, variants, category} = req.body
+    const variantsJSON=[];
+    variants?.forEach(item=>{
+        variantsJSON.push(JSON.parse(item))
+    })
+    console.log(id,itemName, itemId, variants, category);
+    const updatedItem = await UsersModel.findOneAndUpdate({_id:req.user._id,'items._id':id},
+        {
+            $set:{
+                'items.$.itemName':itemName,
+                'items.$.category':category,
+                'items.$.variants':variantsJSON,
+                'items.$.itemId':itemId
+
+        }
+        }
+        )
+        if(!updatedItem){
+            throw new ApiError(501,"Failed to update item")
+        }
+        res.status(202)
+            .json(
+                new ApiResponse(202, "updated Successfully")
+            )
+
+})
+
 export{
     addCategory,
     addItems,
     getCategories,
-    getItems
+    getItems,
+    getItemDetail,
+    editItemDetail
 }
