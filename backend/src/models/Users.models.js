@@ -26,6 +26,11 @@ const orderSchema = new mongoose.Schema({
     items:{
         type:Array
     },
+    orderStatus:{
+        type:String,
+        enum:['Pending', 'In Progress', 'Completed','Cancelled'],
+        default:'Pending'
+    },
     orderIdAuto:{
         type:Number
     }
