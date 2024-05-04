@@ -18,8 +18,8 @@ import reportRoute from './routes/reports.routes.js'
 import restaurantRoute from './routes/restaurant.routes.js'
 import asyncHandler from "./utils/asyncHandler.js";
 
-app.use('/', asyncHandler(async(req, res, next)=>{
-    return res.status(200)
+app.get('/', asyncHandler(async(req, res, next)=>{
+        res.status(200)
         .json({success: 'Success'})
 }))
 
