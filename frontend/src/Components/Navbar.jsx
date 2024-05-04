@@ -26,7 +26,7 @@ const Navbar = () => {
     }
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const restaurant = useSelector(state=>state.user.data.user?.restaurant)
+    const restaurant = useSelector(state=>state?.user?.data?.user?.restaurant)
 
     const handleLogout = async ()=>{
         await axios.post(`${BASE_URL}/api/v1/users/logout`, {}, {headers:{Authorization: localStorage.getItem('AccessToken')}})

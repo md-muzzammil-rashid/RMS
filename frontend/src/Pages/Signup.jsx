@@ -41,7 +41,7 @@ const Signup = () => {
           icon: "success",
           text:"Account Created and Restaurant Registered Successfully"
       }).then(()=>{
-          navigate("/")
+          navigate("/login")
       })
       }
     } catch (error) {
@@ -52,7 +52,6 @@ const Signup = () => {
         icon: "error",
         text:error.response.data.message
     }).then(()=>{
-        // navigate("/items")
         console.log(error);
     })      
     }
@@ -62,21 +61,7 @@ const Signup = () => {
 
 
 
-  useEffect(() => {
-    // console.log("1");
-    if (loginStatus === STATUS.SUCCESS) {
-      console.log("2");
-      navigate("/")
-    }
-    // console.log("3");
 
-  }, [formData, loginStatus])
-
-  // useEffect(()=>{
-  //   console.log('something changed');
-  //   // if (loginStatus !== STATUS.SUCCESS){
-  //   //   setIsLoading(false)
-  //   // }
   // },[loginStatus])
   return (
     <div className='w-full h-screen  ' >
