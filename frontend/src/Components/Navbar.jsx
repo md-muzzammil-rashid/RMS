@@ -50,7 +50,7 @@ const Navbar = () => {
 
                 <div className='mb-10'>
                     <img src={Logo} alt="" />
-                    <h2 className='uppercase font-bold m-2 text-xl text-center'>{restaurant.restaurantName}</h2>
+                    <h2 className='uppercase font-bold m-2 text-xl text-center'>{restaurant?.restaurantName || ""}</h2>
                 </div>
                 <div className='ml-5 text-xl'>
                     <ul className='gap-y-5 flex flex-col'>

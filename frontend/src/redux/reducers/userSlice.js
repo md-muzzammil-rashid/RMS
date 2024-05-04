@@ -24,6 +24,7 @@ export const userSlice = createSlice({
             state.status = STATUS.IDLE
         },
         getUserInfo:(state, action)=>{
+            console.log("getting user Info");
             state.status = STATUS.IDLE
                 state.data = JSON.parse(localStorage.getItem('UserData'))
                 state.message = action.payload?.message

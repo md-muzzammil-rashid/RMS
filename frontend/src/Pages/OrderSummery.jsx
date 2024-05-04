@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {  useParams } from 'react-router-dom';
 import {ThreeDots} from "react-loader-spinner"
-import { FaDownload } from "react-icons/fa"
 import axios from 'axios';
 import { PDFViewer, render, PDFDownloadLink } from '@react-pdf/renderer';
-import Reciept from '../Components/Reciept';
+// import Reciept from '../Components/Reciept';
 import { BASE_URL } from '../utils/constants';
+import { FaDownload } from 'react-icons/fa';
+import Reciept from '../Components/Reciept';
+import { useSelector } from 'react-redux';
 
 const OrderSummery = () => {
     const [loading, setLoading] = useState(true)
@@ -14,6 +16,7 @@ const OrderSummery = () => {
     const [userData, setUserData]=useState({})
     const [statusColor, setStatusColor] = useState('bg-blue-500')
     const [status, setStatus] = useState({orderId,status:userData.orderStatus})
+    const restaurant = useSelector(state=>state?.user?.data?.user?.restaurant)
     const getOrderSummery = async()=>{
         setLoading(true)
         const res = await axios.get(`${BASE_URL}/api/v1/orders/order-summery/${orderId}`,{headers:{Authorization:localStorage.getItem("AccessToken")}})
@@ -25,7 +28,7 @@ const OrderSummery = () => {
         }
     }
     const generateReceipt = async ()=>{
-        await render(<Reciept receiptData={userData} />, 'mydir/receipt.pdf')
+        await render(<Reciept receiptData={userData} restaurant={restaurant} />, 'mydir/receipt.pdf')
     }
 
     const changeStatus = (e) =>{
@@ -59,7 +62,7 @@ const OrderSummery = () => {
     },[userData])
        return (
 
-        loading? <div className='w-full   h-screen flex justify-center items-center '><ThreeDots/></div> :
+        loading || !restaurant ? <div className='w-full   h-screen flex justify-center items-center '><ThreeDots/></div> :
         <div >
 
         <div className=' flex justify-between p-16 '>
@@ -91,7 +94,7 @@ const OrderSummery = () => {
                       </select>
                 </div>
                 <div>
-                    <PDFDownloadLink document={<Reciept receiptData={userData} />} fileName={`${userData._id}.pdf`}>
+                    <PDFDownloadLink document={<Reciept receiptData={userData} restaurant={restaurant} />} fileName={`${userData._id}.pdf`}>
                         {
                             ({blob, url, loading, error})=>(
                                 <button className='flex  justify-center items-center gap-3 bg-green-500 text-white px-3 py-2 rounded-lg'>{loading?'Loading...':"Download Receipt"} <FaDownload /></button>
@@ -102,7 +105,7 @@ const OrderSummery = () => {
                 </div>
                 <div ref={receipt} className=' box-border h-full' >
             <PDFViewer className='w-full min-h-96 h-full'>
-                <Reciept receiptData={userData}/>
+                <Reciept receiptData={userData} restaurant={restaurant}/>
             </PDFViewer>
         </div>
             </div>

@@ -72,13 +72,14 @@ const style = StyleSheet.create({
 })
 
 
-const Reciept = ({receiptData}) => {
-    const restaurant = useSelector(state=>state.user.data.user?.restaurant)
+const Reciept = ({receiptData, restaurant}) => {
+    
+    
     return(
         <Document style={style.document}>
         <Page size={[226,650]} style={style.page}>
             <View style={style.view}>
-                <Text style={style.text_bold} >{restaurant.restaurantName}</Text>
+                <Text style={style.text_bold} >{restaurant.restaurantName || ""}</Text>
                 <Text style={style.text_small}>{restaurant.restaurantLocation?.address || ""}</Text>
                 <Text style={style.text_small}>Tel:{restaurant.contactNumber || ""}</Text>
                 <Text style={style.text_small}>Date: {receiptData.createdAt.slice(0,10)}</Text>
