@@ -55,7 +55,7 @@ const Checkout = () => {
 
   return (
 
-    <div className='pl-72 flex relative flex-col h-full min-h-screen bg-white'>
+    <div className=' flex relative flex-col h-full min-h-screen bg-white'>
       <div className='sticky h-12 top-0 gap-3 z-50 bg-orange-100 flex w-full justify-between pl-72 hover:bg-orange-200-72 box-border p-1 items-center  '>
         <div className='bg-white w-6 h-6 flex items-center justify-center rounded-full '>
          <FaArrowLeft onClick={() => navigate(-1)} className='cursor-pointer' />
@@ -85,13 +85,13 @@ const Checkout = () => {
                 &#8377;{item.variants.price} &times; {item.quantity}
               </div>
 
-              <div className='border flex-shrink-0  border-orange-600 flex rounded-lg cursor-pointer overflow-hidden font-semibold'>
+              <div className='border flex-shrink-0 text-center  border-orange-600 flex rounded-lg cursor-pointer overflow-hidden font-semibold'>
                 <div onClick={() => handleDecrement(item)} className='w-8 bg-orange-600 text-white'>-</div>
                 <div className='w-8 text-orange-600'>{item.quantity}</div>
                 <div onClick={() => handleIncrement(item)} className='w-8 bg-orange-600 text-white'>+</div>
               </div>
 
-              <div className='w-44 bg-green-50 flex-shrink-0'>
+              <div className='w-44 bg-green-50 text-right pr-6 flex-shrink-0'>
                 &#8377;{item.quantity * item.variants.price}
               </div>
 
@@ -126,6 +126,8 @@ const Checkout = () => {
                 <input onChange={formInputHandler}  type="text" name='customerContact' id='phoneNumber' className=' p-2 border-2 border-zinc-700 rounded-lg' />
                 <label htmlFor="discount">Discount (%)</label>
                 <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} name='discount' id='discount' className=' p-2 border-2 border-zinc-700 rounded-lg' />
+                <label htmlFor="discount">Table Number (Optional)</label>
+                <input type="number"  onChange={formInputHandler} name='tableNumber' id='tableNumber' className=' p-2 border-2 border-zinc-700 rounded-lg' />
                 <button onClick={submitFormHandler} className='bg-orange-400 w-28 color hover:bg-orange-500 text-white rounded-xl h-8 font-semibold flex justify-center items-center '>{loading?<TailSpin height={20} color='white' />: "Confirm"}</button>
               </form>
             </div>

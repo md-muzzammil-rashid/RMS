@@ -1,11 +1,11 @@
-import { UsersModel } from "../models/Users.models.js";
+import { RestaurantModel } from "../models/Restaurant.models.js";
 import ApiError from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 const addCategory = asyncHandler(async (req, res, next)=>{
-    const user = await UsersModel.findById(req.user._id);
+    const restaurant = await RestaurantModel.findById(req.user.restaurant);
     const {category} = req.body
     console.log(category);
     console.log(req.file);
@@ -15,8 +15,8 @@ const addCategory = asyncHandler(async (req, res, next)=>{
     console.log(catImg);
     const categoryImage = catImg.url;
 
-    user.productCategory.push({categoryImage, category})    
-    await user.save({validateBeforeSave:false})  
+    restaurant.productCategory.push({categoryImage, category})    
+    await restaurant.save({validateBeforeSave:false})  
     
     return res.status(201)
         .json(
@@ -25,7 +25,7 @@ const addCategory = asyncHandler(async (req, res, next)=>{
 })
 
 const getCategories = asyncHandler(async(req,res,next)=>{
-    const categories = await UsersModel.findById(req.user._id).populate("productCategory")
+    const categories = await RestaurantModel.findById(req.user.restaurant).populate("productCategory")
     if(!categories){
         throw new ApiError(404,"Categories not found")
     }
@@ -34,7 +34,7 @@ const getCategories = asyncHandler(async(req,res,next)=>{
 })
 
 const addItems = asyncHandler(async(req,res)=>{
-    const user = await UsersModel.findById(req.user._id)
+    const user = await RestaurantModel.findById(req.user.restaurant)
     const {category, itemId, itemName, photo, variants} = req.body
     const variantsJSON=[];
     variants.forEach(item=>{
@@ -50,7 +50,7 @@ const addItems = asyncHandler(async(req,res)=>{
 })
 
 const getItems = asyncHandler(async(req, res, next)=>{
-    const user = await UsersModel.findById(req.user._id).populate("items")
+    const user = await RestaurantModel.findById(req.user.restaurant).populate("items")
     if(!user){
         throw new ApiError(402,"Unauthorized Request")
     }
@@ -63,7 +63,7 @@ const getItems = asyncHandler(async(req, res, next)=>{
 const getItemDetail = asyncHandler(async (req, res, next)=>{
     const {id} = req.query
     console.log(id);
-    const item = await UsersModel.findOne({_id:req.user._id ,'items._id':id},{'items.$':1})
+    const item = await RestaurantModel.findOne({_id:req.user.restaurant ,'items._id':id},{'items.$':1})
     if(!item){
         throw new ApiError(404, 'Item not Found')
     }
@@ -76,20 +76,20 @@ const getItemDetail = asyncHandler(async (req, res, next)=>{
 
 const editItemDetail = asyncHandler(async (req, res, next)=>{
     const {id} = req.query
-    const {itemName, itemId, variants, category} = req.body
+    const {itemName, itemId, variants, category, isAvailable} = req.body
     const variantsJSON=[];
     variants?.forEach(item=>{
         variantsJSON.push(JSON.parse(item))
     })
-    console.log(id,itemName, itemId, variants, category);
-    const updatedItem = await UsersModel.findOneAndUpdate({_id:req.user._id,'items._id':id},
+    console.log(id,itemName, itemId, variants, category,isAvailable);
+    const updatedItem = await RestaurantModel.findOneAndUpdate({_id:req.user.restaurant,'items._id':id},
         {
             $set:{
                 'items.$.itemName':itemName,
                 'items.$.category':category,
                 'items.$.variants':variantsJSON,
-                'items.$.itemId':itemId
-
+                'items.$.itemId':itemId,
+                'items.$.isAvailable':isAvailable
         }
         }
         )

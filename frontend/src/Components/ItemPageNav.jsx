@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {FaPlus, FaSearch} from "react-icons/fa"
-import { searchItems } from '../redux/reducers/itemSlice'
+import { getItem, searchItems } from '../redux/reducers/itemSlice'
 
 const ItemPageNav = () => {
   const navigate = useNavigate()
@@ -15,6 +15,7 @@ const ItemPageNav = () => {
   }
 
   useEffect(()=>{
+    // dispatch(getItem('All'))
     dispatch(searchItems(search))
   },[search])
 

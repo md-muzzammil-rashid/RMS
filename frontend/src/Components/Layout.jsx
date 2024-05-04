@@ -1,10 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from './Navbar'
-import { Outlet } from 'react-router-dom'
+import {  Outlet, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Layout = () => {
+  const navigate = useNavigate()
+  const userDetails = async ()=>{
+    try {
+      const res = await axios.get('/api/v1/users/user-details',{headers:{Authorization: localStorage.getItem('AccessToken')}})
+  
+      console.log("res is :", res);
+    } catch (error) {
+      navigate('/login')
+      console.log(error);
+      
+    }
+
+  }
+
+  useEffect(()=>{
+    userDetails()
+  },[])
+
   return (
-    <div>
+    <div className='pl-72 '>
         <Navbar/>
         <Outlet/>
     </div>

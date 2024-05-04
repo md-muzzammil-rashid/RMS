@@ -53,7 +53,7 @@ const AddCategory = () => {
 
 
     return (
-        <div className='pl-72 w-full h-screen flex flex-col justify-center items-center'>
+        <div className=' w-full h-screen flex flex-col justify-center items-center'>
             <div className='max-w-96 box-content p-16 bg-white border rounded-xl shadow-lg relative'>
                 <RiCloseLine onClick={() => navigate(-1)} className='text-2xl font-bold cursor-pointer absolute right-3 top-4 hover:text-red-600' />
                 <form action="" id='categoryForm' className='flex flex-col text-start gap-2'>

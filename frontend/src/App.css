@@ -1,5 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+*{
+    font-family: Roboto;
+}
+b
+
 .App {
   text-align: center;
+  
 }
 
 .App-logo {
@@ -35,4 +42,21 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.login-body{
+  background:url('./Assets/images/nick-karvounis-Ciqxn7FE4vE-unsplash.jpg');
+  background-size: cover;
+  z-index: -1;
+  filter:blur(10px);
+  /* backdrop-filter: undefined; */
+}
+
+.login-form{
+  backdrop-filter: blur(10px);
+
+}
+
+.my-bg{
+  background-color: #eeeff08b;
 }

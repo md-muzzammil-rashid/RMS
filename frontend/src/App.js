@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import ItemsPage from './Pages/ItemsPage';
 import Navbar from './Components/Navbar';
@@ -13,8 +13,21 @@ import Layout from './Components/Layout';
 import OrderSummery from './Pages/OrderSummery';
 import OrderHistory from './Pages/OrderHistory';
 import EditPage from './Pages/EditPage';
+import Setting from './Pages/Setting';
+import PersonalInfo from './Components/PersonalInfo';
+import BusinessInfo from './Components/BusinessInfo';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getUserInfo } from './redux/reducers/userSlice';
+import AddEmployee from './Pages/AddEmployee';
+import axios from 'axios';
 
 function App() {
+  const dispatch = useDispatch()
+ 
+  useEffect(()=>{
+    dispatch(getUserInfo())
+  },[])
   return (
  <BrowserRouter>
       <div className="App">
@@ -28,6 +41,14 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path='/orders' element={<Order />} />
+            <Route path='/sales' element={<Order />} />
+            <Route path='/setting/' element={<Setting />} >
+              <Route index element={<PersonalInfo/>}/>
+              <Route path='business' element={<BusinessInfo/>}/>
+              <Route path='personal' element={<PersonalInfo/>}/>
+
+            </Route>
+              <Route path='setting/business/add-employee' element={<AddEmployee/>}/>
             <Route path='/order-history' element={<OrderHistory />} />
             <Route path='/order-summery/:orderId' element={<OrderSummery />} />
             <Route path='/items'>

@@ -11,15 +11,21 @@ app.use(express.static('public'))
 app.use(cors())
 
 //importing routes
-import userRoute from "./routes/users.routes.js";
+import userRoute from "./routes/user.routes.js";
 import productRoute from "./routes/products.routes.js"
 import orderRoute from "./routes/orders.routes.js"
+import reportRoute from './routes/reports.routes.js'
+import restaurantRoute from './routes/restaurant.routes.js'
+
+app.use("/api/v1/restaurant", restaurantRoute)
 
 app.use("/api/v1/users", userRoute)
 
 app.use("/api/v1/products", productRoute)
 
 app.use("/api/v1/orders", orderRoute)
+
+app.use("/api/v1/reports", reportRoute)
 
 
 

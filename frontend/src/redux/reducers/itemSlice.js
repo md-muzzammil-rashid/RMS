@@ -26,7 +26,6 @@ const itemSlice = createSlice({
         },
         isNotPresent: (state, action) => {
 
-            console.log("tmkdvsasds");
             for (const product of state.products) {
                 if (product.itemName === action.payload.itemName) {
                     return 0;

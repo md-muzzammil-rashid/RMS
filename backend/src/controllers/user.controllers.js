@@ -1,15 +1,16 @@
-import { UsersModel } from "../models/Users.models.js";
 import  ApiError  from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { options } from "../utils/constants.js";
+import { RestaurantModel } from "../models/Restaurant.models.js";
+import { UserModel } from "../models/User.models.js";
 
 const createUser = asyncHandler(async (req, res, next) => {
-    const { username, email, password, displayName, businessName } = req.body
-    if ([username, email, password, displayName, businessName].some((field) => field?.trim() == "")) {
+    const { username, email, password, fullName} = req.body
+    if ([].some((field) => field?.trim() == "")) {
         throw new ApiError(400, "All fields are required")
     }
-    const existedUser = await UsersModel.findOne(
+    const existedUser = await RestaurantModel.findOne(
         {
             $or: [{ username: username, email: email }]
         }
@@ -17,12 +18,14 @@ const createUser = asyncHandler(async (req, res, next) => {
     if (existedUser) {
         throw new ApiError(409, "User already existed with same username or email")
     }
-    const user = await UsersModel.create({
+    const user = await UserModel.create( {restaurantName:'CodeCafe'}, {
+        $push: {employees :{ 
         email,
         username,
         password,
         displayName,
-        businessName
+        businessName,
+        }}
     })
 
     if (!user) {
@@ -34,15 +37,15 @@ const createUser = asyncHandler(async (req, res, next) => {
         )
 })
 
+
+
 const generateAccessAndRefreshToken = async function (userId) {
 
     try {
-        const user = await UsersModel.findById(userId);
-
+        const user = await UserModel.findById(userId);
         const AccessToken = await user.generateAccessToken()
         const RefreshToken = await user.generateRefreshToken()
         user.refreshToken = RefreshToken
-
         await user.save({
             validateBeforeSave: false
         }).then(() =>
@@ -51,21 +54,27 @@ const generateAccessAndRefreshToken = async function (userId) {
         ).catch((err) => console.log("Failed to save refresh token"))
 
         return { AccessToken, RefreshToken }
+
     } catch (error) {
         console.log("Error in Generating token");
     }
-
-
 }
+
+
 
 const loginUser = asyncHandler(async function (req, res, next) {
     const { usernameORemail, password } = req.body
-    const user = await UsersModel.findOne({
+    console.log(usernameORemail, password);
+
+    if([usernameORemail, password].some((field)=>field?.trim()== null ||field?.trim()==  undefined || field?.trim()== ''  ))
+    throw new ApiError(401, 'All Fields are required')
+    const user = await UserModel.findOne({
         $or: [{ username: usernameORemail }, { email: usernameORemail }]
-    })
+    }).populate('restaurant')
 
     if (!user) {
-        throw new ApiError(404, "User not Found")
+        
+        throw new ApiError(404, "User not Found !!")
     }
     const isPasswordCorrect = await user.isPasswordCorrect(password);
     if (!isPasswordCorrect) {
@@ -83,9 +92,10 @@ const loginUser = asyncHandler(async function (req, res, next) {
 })
 
 
+
 const logoutUser = asyncHandler(async ( req, res, next )=>{
     
-    await UsersModel.findByIdAndUpdate(req.user._id,
+    await UserModel.findByIdAndUpdate(req.user._id,
             {
                 $set:{refreshToken: undefined}
             },
@@ -103,8 +113,26 @@ const logoutUser = asyncHandler(async ( req, res, next )=>{
     
 })
 
+
+const userData = asyncHandler(async (req, res, next)=>{
+    const user = await UserModel.findById(req.user._id);
+    if(!user){
+        return res.status(404)
+            .json(
+                new ApiResponse(404, "User not found", {}, false)
+            )
+        }else{
+            return res.status(200)
+               .json(
+                    new ApiResponse(200, "User found", user, true)
+                )
+        }
+
+
+})
+
 export {
-    createUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    userData
 }
