@@ -38,6 +38,9 @@ const restaurantSchema = new mongoose.Schema({
             type:Number
         }
     },
+    contactNumber:{
+        type:String
+    },
 
     totalOrder:{
         type:Number,

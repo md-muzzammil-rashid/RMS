@@ -4,6 +4,7 @@ import { FaPlus } from 'react-icons/fa'
 import { TailSpin } from 'react-loader-spinner'
 import { useNavigate, useParams } from 'react-router-dom'
 import swal from 'sweetalert'
+import { BASE_URL } from '../utils/constants'
 
 const EditPage = () => {
     const navigate = useNavigate()
@@ -20,7 +21,7 @@ const EditPage = () => {
 
 
     const getItemDetail = async () => {
-        const res = await axios.get(`/api/v1/products/edit?id=${id}`, { headers: { Authorization: localStorage.getItem('AccessToken'), "Content-Type": "multipart/form-data" }, })
+        const res = await axios.get(`${BASE_URL}/api/v1/products/edit?id=${id}`, { headers: { Authorization: localStorage.getItem('AccessToken'), "Content-Type": "multipart/form-data" }, })
         setItem(res.data.data)
         setFormInput(res.data.data)
         setUpdateItemDetail(res.data.data)
@@ -55,7 +56,7 @@ const EditPage = () => {
             formData.append("variants[]", JSON.stringify(item))
         })
 
-        const res = await axios.post(`/api/v1/products/edit?id=${id}`, formData, { headers: { Authorization: localStorage.getItem("AccessToken"), "Content-Type": "multipart/form-data" } })
+        const res = await axios.post(`${BASE_URL}/api/v1/products/edit?id=${id}`, formData, { headers: { Authorization: localStorage.getItem("AccessToken"), "Content-Type": "multipart/form-data" } })
         console.log(res.data);
         setLoading(false)
         if (res.data.statusCode === 202) {
@@ -87,7 +88,7 @@ const EditPage = () => {
     }
 
     const getCategory = async () => {
-        const res = await axios.get("/api/v1/products/get-category", { headers: { Authorization: localStorage.getItem("AccessToken") } })
+        const res = await axios.get(`${BASE_URL}/api/v1/products/get-category`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
         // console.log(res.data.data)
         setCategory(res.data.data)
     }

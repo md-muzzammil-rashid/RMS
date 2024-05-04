@@ -10,6 +10,7 @@ import { FaWarehouse } from "react-icons/fa"
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetLogin } from '../redux/reducers/userSlice';
+import { BASE_URL } from '../utils/constants';
 
 
 
@@ -25,10 +26,10 @@ const Navbar = () => {
     }
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const restaurant = useSelector(state=>state.user.data.user.restaurant)
+    const restaurant = useSelector(state=>state.user.data.user?.restaurant)
 
     const handleLogout = async ()=>{
-        await axios.post('/api/v1/users/logout', {}, {headers:{Authorization: localStorage.getItem('AccessToken')}})
+        await axios.post(`${BASE_URL}/api/v1/users/logout`, {}, {headers:{Authorization: localStorage.getItem('AccessToken')}})
         // console.log(res.data);
         .then((res)=>{
                 console.log('success');

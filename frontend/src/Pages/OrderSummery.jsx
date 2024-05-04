@@ -5,6 +5,7 @@ import { FaDownload } from "react-icons/fa"
 import axios from 'axios';
 import { PDFViewer, render, PDFDownloadLink } from '@react-pdf/renderer';
 import Reciept from '../Components/Reciept';
+import { BASE_URL } from '../utils/constants';
 
 const OrderSummery = () => {
     const [loading, setLoading] = useState(true)
@@ -15,7 +16,7 @@ const OrderSummery = () => {
     const [status, setStatus] = useState({orderId,status:userData.orderStatus})
     const getOrderSummery = async()=>{
         setLoading(true)
-        const res = await axios.get(`/api/v1/orders/order-summery/${orderId}`,{headers:{Authorization:localStorage.getItem("AccessToken")}})
+        const res = await axios.get(`${BASE_URL}/api/v1/orders/order-summery/${orderId}`,{headers:{Authorization:localStorage.getItem("AccessToken")}})
         if(res.data.statusCode===200){
             console.log(res.data);
             setUserData(res.data.data)
@@ -32,7 +33,7 @@ const OrderSummery = () => {
         setStatus((prev)=>({...prev,status:e.target.value}))
     }
     const updateStatusFromDB = async ()=>{
-        const res = await axios.post(`/api/v1/orders/update-order-status/${orderId}`,status,{headers:{Authorization:localStorage.getItem('AccessToken')}})
+        const res = await axios.post(`${BASE_URL}/api/v1/orders/update-order-status/${orderId}`,status,{headers:{Authorization:localStorage.getItem('AccessToken')}})
         console.log(res);
         getOrderSummery()
     }

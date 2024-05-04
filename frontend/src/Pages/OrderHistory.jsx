@@ -6,6 +6,7 @@ import Pagination from "@mui/material/Pagination"
 import { TailSpin } from "react-loader-spinner"
 import OrderHistoryTile from '../Components/OrderHistoryTile'
 import OrderHistoryPageNav from '../Components/OrderHistoryPageNav'
+import { BASE_URL } from '../utils/constants'
 
 const OrderHistory = () => {
     const [loading, setLoading] = useState(true)
@@ -18,7 +19,7 @@ const OrderHistory = () => {
     const getOrderHistory = async () => {
         setLoading(true)
         try {
-            const res = await axios.get(`/api/v1/orders/order-history?fromDate=${fromDate}&toDate=${toDate}&page=${page}&limit=10`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
+            const res = await axios.get(`${BASE_URL}/api/v1/orders/order-history?fromDate=${fromDate}&toDate=${toDate}&page=${page}&limit=10`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
             
             if (res.data?.statusCode === 200) {
                 setData(res.data.data.userData)

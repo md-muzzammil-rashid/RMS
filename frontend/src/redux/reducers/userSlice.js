@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { extractErrorMessage } from "../../utils/ErrorExtractor";
+import { BASE_URL } from "../../utils/constants";
 
 export const STATUS = {
     LOADING: "loading",
@@ -66,7 +67,7 @@ export const userSlice = createSlice({
 
 export const getUserData = createAsyncThunk('user/data', async (formData, {rejectWithValue}) => {
         try {
-            const res = await axios.post("/api/v1/users/login", { usernameORemail: formData.usernameORemail, password: formData.password })
+            const res = await axios.post(`${BASE_URL}/api/v1/users/login`, { usernameORemail: formData.usernameORemail, password: formData.password })
             // .catch((err)=>( extractErrorMessage(err.response.data)))
                     
             if (res.data.statusCode === 202) {

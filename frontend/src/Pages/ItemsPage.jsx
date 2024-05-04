@@ -5,6 +5,7 @@ import axios from 'axios'
 import { fetchItems, getItem } from '../redux/reducers/itemSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import {  useNavigate } from 'react-router-dom'
+import { BASE_URL } from '../utils/constants'
 
 const ItemsPage = () => {
   const [category, setCategory] = useState([])
@@ -17,7 +18,7 @@ const ItemsPage = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get("/api/v1/products/get-category", { headers: { Authorization: localStorage.getItem("AccessToken") } })
+        const res = await axios.get(`${BASE_URL}/api/v1/products/get-category`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
         setCategory(res.data.data)
       } catch (error) {
         if(error.response.status===401){

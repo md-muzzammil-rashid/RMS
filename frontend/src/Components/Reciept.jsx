@@ -1,5 +1,6 @@
 import React from 'react'
 import {Document, Page, Text, View, StyleSheet, Image, } from '@react-pdf/renderer'
+import { useSelector } from 'react-redux'
 
 const style = StyleSheet.create({
     view: {
@@ -72,13 +73,14 @@ const style = StyleSheet.create({
 
 
 const Reciept = ({receiptData}) => {
+    const restaurant = useSelector(state=>state.user.data.user?.restaurant)
     return(
         <Document style={style.document}>
         <Page size={[226,650]} style={style.page}>
             <View style={style.view}>
-                <Text style={style.text_bold} >Code Cafe</Text>
-                <Text style={style.text_small}>1st floor, AN Complex, Random Road, Ranchi,834001</Text>
-                <Text style={style.text_small}>Tel:9999 8888 77</Text>
+                <Text style={style.text_bold} >{restaurant.restaurantName}</Text>
+                <Text style={style.text_small}>{restaurant.restaurantLocation?.address || ""}</Text>
+                <Text style={style.text_small}>Tel:{restaurant.contactNumber || ""}</Text>
                 <Text style={style.text_small}>Date: {receiptData.createdAt.slice(0,10)}</Text>
                 <Text style={style.text_small}>Order Id: {receiptData.orderId}</Text>
                 <Text style={style.text_small}>Name: {receiptData.customerName}</Text>

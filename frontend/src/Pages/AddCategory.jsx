@@ -5,6 +5,7 @@ import { RiCloseLine } from 'react-icons/ri'
 import { Link, useNavigate } from 'react-router-dom'
 import swal from "sweetalert"
 import { TailSpin } from "react-loader-spinner"
+import { BASE_URL } from '../utils/constants'
 const AddCategory = () => {
     const navigate = useNavigate()
     const [formInput, setFormInput]=useState({})
@@ -34,7 +35,7 @@ const AddCategory = () => {
             console.log(data[0],data[1]);
         }
 
-        const res = await axios.post("/api/v1/products/add-category",formData, {headers:{Authorization:localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
+        const res = await axios.post(`${BASE_URL}/api/v1/products/add-category`,formData, {headers:{Authorization:localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
         console.log(res.data);
         setLoading(false)
         if(res.data.statusCode===201){

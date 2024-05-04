@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
 
 const STATUS = {
     LOADING: "loading",
@@ -82,7 +83,7 @@ export const { getItem, searchItems, isNotPresent } = itemSlice.actions
 export default itemSlice.reducer
 
 export const fetchItems = createAsyncThunk("item/fetch", async () => {
-    const res = await axios.get("/api/v1/products/get-items", { headers: { Authorization: localStorage.getItem("AccessToken") } })
+    const res = await axios.get(`${BASE_URL}/api/v1/products/get-items`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
     console.log(res.data);
     if (res.data.statusCode === 200) {
         return res.data.data

@@ -6,6 +6,7 @@ import { STATUS, getUserData } from '../redux/reducers/userSlice'
 import { TailSpin } from 'react-loader-spinner'
 import swal from 'sweetalert'
 import toast from 'react-hot-toast'
+import { BASE_URL } from '../utils/constants'
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const Signup = () => {
   const loginHandler = async () => {
 
     try {
-      const res = await axios.post('/api/v1/restaurant/register-restaurant', {data:JSON.stringify(formData)})
+      const res = await axios.post(`${BASE_URL}/api/v1/restaurant/register-restaurant`, {data:JSON.stringify(formData)})
       console.log(res);
       if(res){
         swal({

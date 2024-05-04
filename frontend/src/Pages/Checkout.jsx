@@ -5,6 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {TailSpin} from "react-loader-spinner"
+import { BASE_URL } from '../utils/constants';
 
 const Checkout = () => {
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ const Checkout = () => {
   const submitFormHandler =async (e) =>{
     e.preventDefault()
     setLoading(true)
-    const res =await axios.post("/api/v1/orders/submit-order", data , { headers:{Authorization:localStorage.getItem("AccessToken")}} )
+    const res =await axios.post(`${BASE_URL}/api/v1/orders/submit-order`, data , { headers:{Authorization:localStorage.getItem("AccessToken")}} )
     // console.log(res);
     setLoading(false)
     if(res.data.statusCode==201){

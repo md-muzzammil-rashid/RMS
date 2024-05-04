@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { FaSalesforce } from 'react-icons/fa'
 import { SiBuymeacoffee, SiCashapp } from 'react-icons/si'
+import { BASE_URL } from '../utils/constants'
 
 const Dashboard = () => {
   const [dailySales, setDailySales] = useState([])
@@ -17,7 +18,7 @@ const Dashboard = () => {
 
   const getDailySales = async () => {
     try {
-      const res = await axios.get(`/api/v1/reports/daily-sales?day=${dailySalesDateRange}`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
+      const res = await axios.get(`${BASE_URL}/api/v1/reports/daily-sales?day=${dailySalesDateRange}`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
   
       const convertedDailySalesData = [['Day', 'Revenue', 'TotalRevenue']]
       let runningSum = 0
@@ -36,7 +37,7 @@ const Dashboard = () => {
   }
   const getMostSellingProduct = async () => {
     try {
-      const res = await axios.get(`/api/v1/reports/most-selling-product?day=${mostSellingProductDateRange}`, { headers: { 'Authorization': localStorage.getItem("AccessToken") } })
+      const res = await axios.get(`${BASE_URL}/api/v1/reports/most-selling-product?day=${mostSellingProductDateRange}`, { headers: { 'Authorization': localStorage.getItem("AccessToken") } })
   
       const convertedMostSellingProduct = [["product", "quantity"]];
       const mostSellingProductRevenue = [['Product', 'Revenue', { role: 'style' }]]
@@ -81,7 +82,7 @@ const Dashboard = () => {
   
 const getMonthlySalesNumber=async()=>{
   try {
-    const res = await axios.get(`/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
+    const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
     console.log(res.data.data);
     setMonthlySalesNumber(res.data.data[0])
   } catch (error) {
@@ -92,7 +93,7 @@ const getMonthlySalesNumber=async()=>{
 }
 const getDailySalesNumber=async()=>{
   try {
-    const res = await axios.get(`/api/v1/reports/total-sales?`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
+    const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
     console.log(res.data.data);
     setDailySalesNumber(res.data.data[0])
   } catch (error) {
