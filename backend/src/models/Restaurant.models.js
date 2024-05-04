@@ -61,11 +61,11 @@ const restaurantSchema = new mongoose.Schema({
     }],
     employees:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Us'
+        ref: 'Users'
     }]
 
 })
 
 
 
-export const RestaurantModel = mongoose.model("Rest", restaurantSchema)
+export const RestaurantModel = mongoose.model("Restaurants", restaurantSchema)

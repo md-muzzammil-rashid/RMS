@@ -77,7 +77,7 @@ const Signup = () => {
           }
           {formPart ?
 
-            <div className='flex flex-col h-full justify-center items-center bg-white gap-5 w-3/5'>
+            <div className='flex flex-col  justify-center items-center bg-white gap-5 w-3/5'>
               <span className='font-semibold text-xl'>Owner's Details</span>
 
               <input value={formData.email} onChange={changeHandler} placeholder='Email' type="email" name='email' className='border-2 rounded-3xl w-72 px-4 py-2 focus:ring-white' />
@@ -92,7 +92,7 @@ const Signup = () => {
               </div>
             </div>
             :
-            <div className='flex flex-col h-full justify-center items-center bg-white gap-5 w-3/5'>
+            <div className='flex flex-col justify-center items-center bg-white gap-5 w-3/5'>
               <span className='font-semibold text-xl'>Restaurant Details</span>
 
 

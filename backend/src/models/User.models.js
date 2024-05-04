@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
     },
     restaurant:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: 'Rest'
+        ref: 'Restaurants'
     }
 });
 
@@ -95,4 +95,4 @@ userSchema.methods.generateRefreshToken = async function () {
     )
 }
 
-export const UserModel = mongoose.model('Us', userSchema)
+export const UserModel = mongoose.model('Users', userSchema)
