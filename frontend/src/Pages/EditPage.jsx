@@ -4,7 +4,8 @@ import { FaPlus } from 'react-icons/fa'
 import { TailSpin } from 'react-loader-spinner'
 import { useNavigate, useParams } from 'react-router-dom'
 import swal from 'sweetalert'
-import { BASE_URL } from '../utils/constants'
+import { editItem, getCategory, getItemDetails } from '../Services/Operations/ProductAPI'
+import {Multiselect} from 'multiselect-react-dropdown'
 
 const EditPage = () => {
     const navigate = useNavigate()
@@ -18,15 +19,17 @@ const EditPage = () => {
     const [category, setCategory] = useState(updateItemDetail.category)
     const [formInput, setFormInput] = useState(updateItemDetail)
     const [loading, setLoading] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState([])
 
 
     const getItemDetail = async () => {
-        const res = await axios.get(`${BASE_URL}/api/v1/products/edit?id=${id}`, { headers: { Authorization: localStorage.getItem('AccessToken'), "Content-Type": "multipart/form-data" }, })
-        setItem(res.data.data)
-        setFormInput(res.data.data)
-        setUpdateItemDetail(res.data.data)
-        setVariants(res.data.data.variants)
-        setIsAvailable(res.data.data.isAvailable)
+        const res = await getItemDetails({id})
+        setItem(res)
+        setFormInput(res)
+        setUpdateItemDetail(res)
+        setVariants(res.variants)
+        setIsAvailable(res.isAvailable)
+        res.category.forEach(e=>setSelectedCategory(prev=>([...prev, {category:e}])))
 
     }
 
@@ -42,24 +45,41 @@ const EditPage = () => {
         setFileInput(file)
     }
 
+    const onSelect = (selectedList, selectedItem) => {
+        setSelectedCategory(prev=>([...prev, {category:selectedItem.category}]));
+    }
+    const onRemove = (selectedList, removedItem) => {
+        setSelectedCategory(prev=> prev.filter(i=> i.category!== removedItem.category))
+    }
+
+    let categories = [];
+    category?.forEach(cat=>{
+        categories.push({category : cat.category})
+    })
+    console.log(categories);
 
     const submitHandler = async () => {
         setLoading(true)
         const formData = new FormData()
         // formData.append("photo", fileInput)
+        let selectedCategoryForSend = [];
+        selectedCategory.forEach(cat=>{
+            selectedCategoryForSend.push(cat.category)
+            console.log("**********");
+            console.log(cat);
+        })
         formData.append("itemId", formInput.itemId)
         formData.append("itemName", formInput.itemName)
-        formData.append("category", formInput.category)
+        formData.append("category", selectedCategoryForSend)
         formData.append("isAvailable", formInput.isAvailable)
 
         formInput.variants.forEach(item => {
             formData.append("variants[]", JSON.stringify(item))
         })
 
-        const res = await axios.post(`${BASE_URL}/api/v1/products/edit?id=${id}`, formData, { headers: { Authorization: localStorage.getItem("AccessToken"), "Content-Type": "multipart/form-data" } })
-        console.log(res.data);
+        const res = await editItem({formData, id})
         setLoading(false)
-        if (res.data.statusCode === 202) {
+        if (res ) {
             swal({
                 title: "Updated!",
                 icon: "success",
@@ -87,10 +107,9 @@ const EditPage = () => {
         setVariants((prev) => (prev.filter((item) => item.variant !== itemVariant)));
     }
 
-    const getCategory = async () => {
-        const res = await axios.get(`${BASE_URL}/api/v1/products/get-category`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
-        // console.log(res.data.data)
-        setCategory(res.data.data)
+    const getCategories = async () => {
+        const res = await getCategory()
+        setCategory(res)
     }
 
     useEffect(() => {
@@ -99,7 +118,7 @@ const EditPage = () => {
     }, [variants, isAvailable]);
 
     useEffect(() => {
-        getCategory()
+        getCategories()
         getItemDetail()
     }, []);
 
@@ -116,16 +135,26 @@ const EditPage = () => {
                 <div>
                     <form action="" className='flex flex-col text-start gap-2'>
                         <h2 className='text-center font-semibold text-lg'>Item Detail</h2>
-                        <select onChange={handleChange} value={formInput?.category || updateItemDetail.category} name="category" id="" className='p-2 border rounded-lg'>
+                        {/* <select onChange={handleChange} value={formInput?.category || updateItemDetail.category} name="category" id="" className='p-2 border rounded-lg'>
                             <option selected disabled value="">Category</option>
                             {category?.map((elem) => (
                                 <option value={elem.category}>{elem.category}</option>
                             ))}
 
-                        </select>
+                        </select> */}
+                        <Multiselect
+                        onSelect={onSelect}  
+                        onRemove={onRemove}  
+                        options={categories}
+
+
+                        
+                        // selectedValues={selectedCategory || formInput?.category || updateItemDetail?.category}
+                        selectedValues={selectedCategory }
+                        displayValue={'category'}
+                    />
                         <label htmlFor="title">Item Name </label>
                         <input type="text" onChange={handleChange} value={formInput?.itemName || updateItemDetail?.itemName} name='itemName' placeholder='Item Name' className='p-2 border rounded-lg' />
-                        <label htmlFor="title">Item Id</label>
 
 
 
@@ -136,6 +165,7 @@ const EditPage = () => {
                             <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             {/* <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span> */}
                         </label>
+                        <label htmlFor="title">Item Id</label>
 
 
                         <input type="text" onChange={handleChange} value={formInput?.itemId || updateItemDetail.itemId} placeholder='Item Id' name="itemId" className='p-2  border rounded-lg' />

@@ -66,19 +66,28 @@ const loginUser = asyncHandler(async function (req, res, next) {
     const { usernameORemail, password } = req.body
     console.log(usernameORemail, password);
 
-    if([usernameORemail, password].some((field)=>field?.trim()== null ||field?.trim()==  undefined || field?.trim()== ''  ))
-    throw new ApiError(401, 'All Fields are required')
+    if([usernameORemail, password].some((field)=>field?.trim()== null ||field?.trim()==  undefined || field?.trim()== ''  )){
+    // throw new ApiError(401, 'All Fields are required')
+        return res.status(200)
+           .json(
+                new ApiResponse(401, "All fields are required", {}, false)
+            )
+    }
     const user = await UserModel.findOne({
         $or: [{ username: usernameORemail }, { email: usernameORemail }]
     }).populate('restaurant')
 
     if (!user) {
-        
-        throw new ApiError(404, "User not Found !!")
+        return res.status(200)
+        .json( new ApiResponse(404, "User not Found !!"))
     }
     const isPasswordCorrect = await user.isPasswordCorrect(password);
     if (!isPasswordCorrect) {
-        throw new ApiError(401, "Invalid Credentials")
+        return res.status(200)
+        .json(
+
+          new ApiResponse(401, "Invalid Credentials")
+        )
     }
     const {RefreshToken, AccessToken} = await generateAccessAndRefreshToken(user._id);
 

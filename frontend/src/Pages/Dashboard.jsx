@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Chart } from 'react-google-charts'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { FaSalesforce } from 'react-icons/fa'
 import { SiBuymeacoffee, SiCashapp } from 'react-icons/si'
-import { BASE_URL } from '../utils/constants'
+import { } from '../utils/constants'
+import { getDailySales, getDailySalesNumber, getMonthlySalesNumber, getMostSellingProduct } from '../Services/Operations/ReportAPI'
 
 const Dashboard = () => {
   const [dailySales, setDailySales] = useState([])
@@ -16,86 +15,38 @@ const Dashboard = () => {
   const [dailySalesNumber, setDailySalesNumber] = useState()
   const navigate = useNavigate()
 
-  const getDailySales = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/v1/reports/daily-sales?day=${dailySalesDateRange}`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
+  const getDailySalesReport = async () => {
+      const res = await getDailySales({dailySalesDateRange})
   
-      const convertedDailySalesData = [['Day', 'Revenue', 'TotalRevenue']]
-      let runningSum = 0
-      res.data.data.forEach(item => {
-        // console.log(item);
-        runningSum = runningSum + item.value.total
-        convertedDailySalesData.push([item.date, item.value.total, runningSum])
-      })
-      setDailySales(convertedDailySalesData)
-    } catch (error) {
-      if(error.response.status===401){
-        console.log('navigating');
-        navigate('/login')
-      }
-        }
+      if(res.status)
+        setDailySales(res.convertedDailySalesData)
+    
+        
   }
-  const getMostSellingProduct = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/v1/reports/most-selling-product?day=${mostSellingProductDateRange}`, { headers: { 'Authorization': localStorage.getItem("AccessToken") } })
-  
-      const convertedMostSellingProduct = [["product", "quantity"]];
-      const mostSellingProductRevenue = [['Product', 'Revenue', { role: 'style' }]]
-      const defaultChartColors = [
-        '#4285F4', // Blue
-        '#DB4437', // Red
-        '#F4B400', // Yellow
-        '#0F9D58', // Green
-        '#AB47BC', // Purple
-        '#26C6DA', // Cyan
-        '#EC407A', // Magenta
-        '#66BB6A', // Lime
-        '#b92f2e', // Orange
-        '#306394', // Pink
-      ];
-  
-      let counter = 0
-      res.data.data.forEach(item => {
-        // console.log(item);
-        const itemSold = `${item.itemsDetails[0].itemName} : ${item.itemsDetails[0].variant} - Qty : ${item.quantity}`;
-        const quantity = item.quantity;
-        const revenue = quantity * (item.itemsDetails[0].price)
-        // console.log(quantity, itemSold,revenue);
-        mostSellingProductRevenue.push([itemSold, revenue, defaultChartColors[counter]])
-        convertedMostSellingProduct.push([itemSold, quantity]);
-        counter++
-      });
-  
-  
-  
-      setMostSellingProducts(convertedMostSellingProduct)
-      setMostSellingProductsRevenue(mostSellingProductRevenue)
-    } catch (error) {
-
-      if(error.response.status===401){
-        console.log('navigating');
-        navigate('/login')
-      }
+  const getMostSellingProductReport = async () => {
+    const res = await getMostSellingProduct({mostSellingProductDateRange})
+    if(res.status){
+      setMostSellingProducts(res.convertedMostSellingProduct)
+      setMostSellingProductsRevenue(res.mostSellingProductRevenue)
     }
+  } 
 
-  }
   
-const getMonthlySalesNumber=async()=>{
+  
+const getMonthlySalesNumberReport=async()=>{
   try {
-    const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
-    console.log(res.data.data);
-    setMonthlySalesNumber(res.data.data[0])
+    // const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
+    const res = await getMonthlySalesNumber()
+    setMonthlySalesNumber(res)
+
   } catch (error) {
-    if(error.response.status === 401) {
-      navigate('/login')
-    }
+   console.log(error);
   }
 }
-const getDailySalesNumber=async()=>{
+const getDailySalesNumberReport=async()=>{
   try {
-    const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
-    console.log(res.data.data);
-    setDailySalesNumber(res.data.data[0])
+    const res = await getDailySalesNumber()
+    setDailySalesNumber(res)
   } catch (error) {
     if(error.response.status===401){
       navigate('/login')
@@ -103,17 +54,18 @@ const getDailySalesNumber=async()=>{
     }
 }
 useEffect(()=>{
-  getMonthlySalesNumber()
-  getDailySalesNumber()
+  getMonthlySalesNumberReport()
+  getDailySalesNumberReport()
 },[])
   
   useEffect(() => {
-    getMostSellingProduct()
+    getMostSellingProductReport()
   }, [mostSellingProductDateRange])
 
   useEffect(() => {
-    getDailySales()
+    getDailySalesReport()
   }, [dailySalesDateRange])
+
 
   return (
     <div className='my-bg'>

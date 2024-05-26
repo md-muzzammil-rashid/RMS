@@ -1,12 +1,9 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { FaDownload, FaReceipt, FaRecordVinyl } from "react-icons/fa"
-import { useNavigate } from 'react-router-dom'
 import Pagination from "@mui/material/Pagination"
 import { TailSpin } from "react-loader-spinner"
-import OrderHistoryTile from '../Components/OrderHistoryTile'
-import OrderHistoryPageNav from '../Components/OrderHistoryPageNav'
-import { BASE_URL } from '../utils/constants'
+import OrderHistoryTile from '../Components/Core/OrderHistory/OrderHistoryTile'
+import OrderHistoryPageNav from '../Components/Core/OrderHistory/OrderHistoryPageNav'
+import { getOrderHistory } from '../Services/Operations/OrderAPI'
 
 const OrderHistory = () => {
     const [loading, setLoading] = useState(true)
@@ -15,29 +12,20 @@ const OrderHistory = () => {
     const [pageLength, setPageLength] = useState(1)
     const [fromDate, setFromDate] = useState("")
     const [toDate, setToDate] = useState("")
-    const navigate = useNavigate()
-    const getOrderHistory = async () => {
-        setLoading(true)
-        try {
-            const res = await axios.get(`${BASE_URL}/api/v1/orders/order-history?fromDate=${fromDate}&toDate=${toDate}&page=${page}&limit=10`, { headers: { Authorization: localStorage.getItem("AccessToken") } })
-            
-            if (res.data?.statusCode === 200) {
-                setData(res.data.data.userData)
-                setPageLength(res.data.data.len)
-                if(res.data.data.len < page){
-                    setPage(res.data.data.len)
-                }
-                console.log(res.data.data.userData);
-            }
-        } catch (error) {
-            if(error.response.status===401){
-                navigate('/login')
-            }
-            
-        }
 
-        setLoading(false)
+    const orderHistory =async () => {
+        setLoading(true)
+        const res = await getOrderHistory({fromDate, toDate, page, limit:10})
+        if (res) {
+            setData(res.userData)
+            setPageLength(res.len)
+            setLoading(false)
+            if(res.len < page){
+                setPage(res.len)
+            }
+        }
     }
+
     const handlePage = (e, value) => {
         setPage(value)
     }
@@ -45,7 +33,7 @@ const OrderHistory = () => {
     useEffect(() => {
         console.log(fromDate);
         console.log(toDate);
-        getOrderHistory()
+        orderHistory()
     }, [page, fromDate, toDate])
     return (
         <div className='w-full '>
@@ -55,7 +43,7 @@ const OrderHistory = () => {
                     <TailSpin />
                 </div>
                 :
-                <div className='flex flex-col '>
+                <div className='flex flex-col w-full '>
                     <div className='flex  font-semibold text-zinc-500 bg-zinc-400 bg-opacity-20  p-4 m-3 gap-3 rounded-lg'>
                         <div className='w-24 text-ellipsis flex-shrink-0' >OrderId</div>
                         <div className='w-24 flex-shrink-0' >Date</div>
@@ -65,10 +53,14 @@ const OrderHistory = () => {
                         <div className='flex-grow-0 flex-shrink-0 w-20 text-start' >Price</div>
                         <div className='flex-grow-0 flex-shrink-0 w-16 items-center' >Status</div>
                     </div>
-                    {data?.map((item, index) => (
+                    {data?
+                    data.map((item, index) => (
                         <OrderHistoryTile key={index} item={item} index={index}/>
-                        
-                    ))}
+                    )
+                )
+                :
+                <span className='min-w-full text-center font-semibold text-3xl pt-16 items-center  text-stone-600 min-h-40'>No Records</span>
+            }
                 </div>}
             <div className='flex justify-center items-center w-full my-4'>
                 <Pagination count={pageLength} onChange={handlePage} page={page} variant="outlined" shape="rounded" />

@@ -3,10 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 const OrderHistoryTile = ({ item, index }) => {
     const navigate = useNavigate()
-    // console.log(item);
-    const uniqueItm = new Set(item.items.map((itm) => itm.name))
-    const uniqueItems = Array.from(uniqueItm)
-    // console.log(uniqueItems);
 
 
     const statusColor = (status) => {

@@ -1,9 +1,7 @@
 import React from 'react'
 
 const OrderHistoryPageNav = ({setFromDate, setToDate}) => {
-  const setDateToIso = (date)=>{
 
-  }
   const fromDateHandler = (e) =>{
     setFromDate(e.target.value+"T00:00:00.000Z")
   }

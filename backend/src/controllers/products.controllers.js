@@ -43,7 +43,11 @@ const addItems = asyncHandler(async(req,res)=>{
     
     const itemImg = await uploadOnCloudinary(req.file.path)
     const itemImgLink = itemImg.url
-    user.items.push({category, itemId, itemName, variants:variantsJSON, photo:itemImgLink})
+    console.log(category);
+    // const categoryArray = [];
+    
+
+    user.items.push({category: category.split(','), itemId, itemName, variants:variantsJSON, photo:itemImgLink})
     await user.save({validateBeforeSave:false})
     return res.status(201)
         .json(new ApiResponse(201,"Added", {}))
@@ -81,12 +85,13 @@ const editItemDetail = asyncHandler(async (req, res, next)=>{
     variants?.forEach(item=>{
         variantsJSON.push(JSON.parse(item))
     })
-    console.log(id,itemName, itemId, variants, category,isAvailable);
+    console.log(category);
+    // console.log(id,itemName, itemId, variants, category:category.split(','),isAvailable);
     const updatedItem = await RestaurantModel.findOneAndUpdate({_id:req.user.restaurant,'items._id':id},
         {
             $set:{
                 'items.$.itemName':itemName,
-                'items.$.category':category,
+                'items.$.category':category.split(','),
                 'items.$.variants':variantsJSON,
                 'items.$.itemId':itemId,
                 'items.$.isAvailable':isAvailable

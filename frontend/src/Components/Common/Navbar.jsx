@@ -2,20 +2,18 @@ import React from 'react'
 import { BsGrid1X2Fill } from 'react-icons/bs'
 import { CiMemoPad } from 'react-icons/ci'
 import { IoIosLogOut, IoIosRestaurant, IoMdLogOut, IoMdSettings } from "react-icons/io";
-import { GiWallet } from "react-icons/gi";
 import { RiTodoFill } from "react-icons/ri";
-import Logo from "../Assets/images/logo.png"
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { FaWarehouse } from "react-icons/fa"
-import axios from 'axios';
+import Logo from "../../Assets/images/logo.png"
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetLogin } from '../redux/reducers/userSlice';
-import { BASE_URL } from '../utils/constants';
+import { logOut } from '../../Services/Operations/AuthAPI';
+import { resetLogin } from '../../redux/reducers/userSlice';
 
 
 
 const Navbar = () => {
-
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const navLinkStyle = ({ isActive }) => {
         return {
             color: isActive ? "#f8a100" : "white",
@@ -24,25 +22,18 @@ const Navbar = () => {
 
         }
     }
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+
     const restaurant = useSelector(state=>state?.user?.data?.user?.restaurant)
 
     const handleLogout = async ()=>{
-        await axios.post(`${BASE_URL}/api/v1/users/logout`, {}, {headers:{Authorization: localStorage.getItem('AccessToken')}})
-        // console.log(res.data);
-        .then((res)=>{
-                console.log('success');
-                dispatch(resetLogin({message:'Logout Successful'}))
-                navigate('/login')
-                localStorage.clear()
-        })
-        .catch((err=>{
-            if(err.response.status===401){
-                navigate('/login')
-            }
-        }))
+        const res =  await logOut()
+        console.log('success');
+        dispatch(resetLogin({message:'Logout Successful'}))
+        localStorage.clear()
+        navigate('login')
     }
+    
+
 
     return (
         <div style={{ backgroundColor: "#000000" }} className='  flex-col p-8 gap-10 fixed top-0 left-0 items-start text-white h-screen flex w-72 box-border   z-10'>

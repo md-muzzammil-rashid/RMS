@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { extractErrorMessage } from "../../utils/ErrorExtractor";
-import { BASE_URL } from "../../utils/constants";
+import { logIn, userDetails } from "../../Services/Operations/AuthAPI";
 
 export const STATUS = {
     LOADING: "loading",
@@ -15,7 +13,8 @@ export const userSlice = createSlice({
     initialState: {
         status: "",
         data: [],
-        message: ''
+        message: '',
+        token: null
     },
     reducers: {
         resetLogin: (state, action) => {
@@ -28,6 +27,13 @@ export const userSlice = createSlice({
             state.status = STATUS.IDLE
                 state.data = JSON.parse(localStorage.getItem('UserData'))
                 state.message = action.payload?.message
+                state.token = action.payload?.data?.AccessToken
+        },
+        setUserDetails: (state, action) => {
+            state.status = STATUS.SUCCESS
+            state.data = action.payload.data
+            state.message = action.payload.message
+            state.token = action.payload.data?.AccessToken
         }
         // setLogin: (state, action) =>{
         //     state.data = action.payload.data
@@ -40,24 +46,48 @@ export const userSlice = createSlice({
         //     state.message = action.payload
         // }
     },
+
     extraReducers: (builder) => {
         builder
-            .addCase(getUserData.fulfilled, (state, action) => {
+            .addCase(LoginUser.fulfilled, (state, action) => {
+                console.log(action.payload);
+                if(action.payload.statusCode === 202){
+                    state.status = STATUS.SUCCESS
+                }else{
+                    state.status = STATUS.ERROR
+                }
+                state.data = action.payload?.data
+                state.message = action.payload?.message
+                state.token = action.payload?.data?.AccessToken
+            })
+
+            .addCase(LoginUser.rejected, (state, action) => {
+                state.status = STATUS.ERROR
+                state.data = action.payload
+                state.message = action.error.message
+                console.log("the msg is " , action.payload);
+                
+
+            })
+
+            .addCase(LoginUser.pending, (state, action) => {
+                state.status = STATUS.pending
+                state.message = 'Loading'
+            })
+
+            .addCase(getUserData.fulfilled, (state, action)=>{
                 state.status = STATUS.SUCCESS
                 state.data = action.payload?.data
                 state.message = action.payload?.message
+                state.token = action.payload?.data?.AccessToken
             })
-
-            .addCase(getUserData.rejected, (state, action) => {
-                // console.log(action);
+            .addCase(getUserData.rejected, (state, action)=>{
                 state.status = STATUS.ERROR
                 state.data = action.payload
-                state.message = action.payload
-
+                state.message = action.error.message
             })
-
-            .addCase(getUserData.pending, (state, action) => {
-                state.status = STATUS.pending
+            .addCase(getUserData.pending, (state, action)=>{
+                state.status = STATUS.LOADING
                 state.message = 'Loading'
             })
 
@@ -66,27 +96,53 @@ export const userSlice = createSlice({
 
 
 
-export const getUserData = createAsyncThunk('user/data', async (formData, {rejectWithValue}) => {
-        try {
-            const res = await axios.post(`${BASE_URL}/api/v1/users/login`, { usernameORemail: formData.usernameORemail, password: formData.password })
+export const LoginUser = createAsyncThunk('user/data', async (formData, {rejectWithValue}) => {
+            // const res = await axios.post(`${BASE_URL}/api/v1/users/login`, { usernameORemail: formData.usernameORemail, password: formData.password })
+
+            const res = await logIn({usernameORemail: formData.usernameORemail, password: formData.password})
             // .catch((err)=>( extractErrorMessage(err.response.data)))
-                    
-            if (res.data.statusCode === 202) {
-                        localStorage.setItem("AccessToken", res.data.data.AccessToken)
-                        localStorage.setItem("RefreshToken", res.data.data.RefreshToken)
-                        localStorage.setItem('UserData', JSON.stringify(res.data.data))
+
+            if (res.statusCode === 202) {
+                
+                        localStorage.setItem("AccessToken", res.data.AccessToken)
+                        localStorage.setItem("RefreshToken", res.data.RefreshToken)
+                        localStorage.setItem('UserData', JSON.stringify(res.data))
                         console.log(localStorage.getItem("AccessToken"));
-                        console.log(res);
-                        return res.data
                     }
-        } catch (error) {
-            console.log('error is: ', extractErrorMessage(error.response.data));
-            return rejectWithValue(extractErrorMessage(error.response.data))
-        }
+                    return res
+            // console.log('error is: ', extractErrorMessage(error.response.data));
+            // return rejectWithValue(extractErrorMessage(error.response.data))
+            // throw error        }
+
             })
+
+export const getUserData = createAsyncThunk  ('user/details', async(data, {rejectWithValue})=>{
+    const res = await  userDetails()
+    if(res.statusCode === 200)
+    return res
+}) 
+
 
 export default userSlice.reducer;
 export const { resetLogin, setLogin, setStatus , setMessage, getUserInfo} = userSlice.actions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export const getUserData = (formData)=>{
 //     return async (dispatch, getStatus)=>{

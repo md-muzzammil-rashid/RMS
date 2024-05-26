@@ -1,12 +1,13 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { STATUS, getUserData } from '../redux/reducers/userSlice'
 import { TailSpin } from 'react-loader-spinner'
 import swal from 'sweetalert'
 import toast from 'react-hot-toast'
 import { BASE_URL } from '../utils/constants'
+import { signUp } from '../Services/Operations/AuthAPI'
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,6 @@ const Signup = () => {
     password: "",
     confirmPassword: ""
   })
-  const loginStatus = useSelector((state) => state.user.status)
   const [isLoading, setIsLoading] = useState(false)
   const [formPart, setFormPart] = useState(false)
   const navigate = useNavigate()
@@ -30,39 +30,30 @@ const Signup = () => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
-  const loginHandler = async () => {
+  const loginHandler =async () => {
 
-    try {
-      const res = await axios.post(`${BASE_URL}/api/v1/restaurant/register-restaurant`, {data:JSON.stringify(formData)})
-      console.log(res);
-      if(res){
-        swal({
-          title:"Created!",
-          icon: "success",
-          text:"Account Created and Restaurant Registered Successfully"
-      }).then(()=>{
-          navigate("/login")
-      })
-      }
-    } catch (error) {
-
-      toast.success(error.response.data.message)
+    const res =await signUp({formData})
+    if(res.status ){
+      swal({
+        title:"Created!",
+        icon: "success",
+        text:"Account Created and Restaurant Registered Successfully"
+    }).then(()=>{
+        navigate("/login")
+    })
+    }else{
+      toast.error(res.error.response.data.message)
       swal({
         title:"Error!",
         icon: "error",
-        text:error.response.data.message
-    }).then(()=>{
-        console.log(error);
-    })      
+        text:res.error.response.data.message
+    })
     }
-
-
+    
   }
 
 
 
-
-  // },[loginStatus])
   return (
     <div className='w-full h-screen  ' >
       <div className='login-body absolute top-0 left-0 w-screen h-screen -z-10' ></div>
@@ -106,6 +97,10 @@ const Signup = () => {
 
             </div>
           }
+          <div className='border-t-4 pt-4 text-center w-6/12'>
+                <span>Already have Account? <span className='text-blue-500 font-semibold cursor-pointer'><Link to={'/login'}>Login to your Account</Link></span></span>
+
+              </div>
 
         </div>
       </div>

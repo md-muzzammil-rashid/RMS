@@ -99,7 +99,7 @@ const Reciept = ({receiptData, restaurant}) => {
             </View>
             {
                 receiptData.items.map((item)=>(
-                    <View style={style.table}>
+                    <View key={item.name} style={style.table}>
                 <Text style={style.td_shrink}> {item.itemId} </Text>
                 <Text style={style.td_grow}> {item.name} : {item.variants.variant} </Text>
                 <Text style={style.td_qty}> {item.quantity} </Text>

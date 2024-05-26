@@ -23,9 +23,9 @@ export const itemsSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    category: {
-        type: String
-    },
+    category: [{
+        type: String,
+    }],
     isAvailable: {
         type:Boolean,
         default:true

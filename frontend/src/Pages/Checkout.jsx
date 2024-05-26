@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {TailSpin} from "react-loader-spinner"
 import { BASE_URL } from '../utils/constants';
+import { submitOrder } from '../Services/Operations/OrderAPI';
+import CheckoutItemsTile from '../Components/Core/Items/CheckoutItemsTile';
 
 const Checkout = () => {
   const navigate = useNavigate()
@@ -39,10 +41,11 @@ const Checkout = () => {
   const submitFormHandler =async (e) =>{
     e.preventDefault()
     setLoading(true)
-    const res =await axios.post(`${BASE_URL}/api/v1/orders/submit-order`, data , { headers:{Authorization:localStorage.getItem("AccessToken")}} )
+    
     // console.log(res);
     setLoading(false)
-    if(res.data.statusCode==201){
+    const res = await submitOrder({data})
+    if(res){
       const data = res.data.data.orders
       const orderId = data[data.length-1]
       dispatch(clearItems())
@@ -73,30 +76,7 @@ const Checkout = () => {
             <div className='text-center w-44'> Price </div>
           </div>
           {products.product.map((item) => (
-            <div key={item.id} className='flex items-center bg-white justify-between gap-4' >
-              <div className=' h-24 overflow-hidden flex-shrink-0'>
-                <img src={item.image} alt="" className='object-center aspect-square  object-fill h-24 w-24 p-2 rounded-3xl' />
-              </div>
-              <div className='flex-grow'>
-                <h2 className='text-start'>
-                  {item.name} : {item.variants.variant}
-                </h2>
-              </div>
-              <div className='flex-shrink-0 w-44'>
-                &#8377;{item.variants.price} &times; {item.quantity}
-              </div>
-
-              <div className='border flex-shrink-0 text-center  border-orange-600 flex rounded-lg cursor-pointer overflow-hidden font-semibold'>
-                <div onClick={() => handleDecrement(item)} className='w-8 bg-orange-600 text-white'>-</div>
-                <div className='w-8 text-orange-600'>{item.quantity}</div>
-                <div onClick={() => handleIncrement(item)} className='w-8 bg-orange-600 text-white'>+</div>
-              </div>
-
-              <div className='w-44 bg-green-50 text-right pr-6 flex-shrink-0'>
-                &#8377;{item.quantity * item.variants.price}
-              </div>
-
-            </div>
+            <CheckoutItemsTile key={item} item={item} handleDecrement={handleDecrement} handleIncrement={handleIncrement} />
           ))}
         </div>
         <div className='w-1/3 bg-white min-h-full  '>
