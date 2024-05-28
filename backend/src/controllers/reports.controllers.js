@@ -147,7 +147,7 @@ const dailySales2 = asyncHandler(async (req, res, next) => {
     // console.log('start date is', currentDate);
     startDate.setDate(currentDate.getDate()- Number(day))
     startDate.setHours(-11,-1,0,0)
-    console.log(day, limit, startDate);
+    // console.log(day, limit, startDate);
     const mostSellingData = await RestaurantModel.aggregate(
       [
         {
@@ -214,7 +214,7 @@ const dailySales2 = asyncHandler(async (req, res, next) => {
     const startDate = new Date()
     startDate.setDate(currentDate.getDate()- Number(day))
     startDate.setHours(-11,-1,0,0)
-    console.log(day, startDate);
+    // console.log(day, startDate);
 
     const totalSalesAndOrder = await RestaurantModel.aggregate(
       [
@@ -273,7 +273,7 @@ const dailySales2 = asyncHandler(async (req, res, next) => {
       ]
     )
       const report = await fillMissingDates(totalSalesAndOrder, day)
-    console.log(report.length, report )
+    // console.log(report.length, report )
 
     res.status(200)
       .json(
@@ -291,7 +291,7 @@ const dailySales2 = asyncHandler(async (req, res, next) => {
     }else{
       startDate.setHours(-11,-1,0,0)
     }
-    console.log(startDate);
+    // console.log(startDate);
     const data = await RestaurantModel.aggregate(
       [
         {

@@ -14,6 +14,7 @@ const OrderSummery = () => {
     const { orderId } = useParams()
     const receipt = useRef()
     const [userData, setUserData] = useState({})
+    const [statusFetch, setStatusFetch] = useState(false)
     const [statusColor, setStatusColor] = useState('bg-blue-500')
     const [status, setStatus] = useState({ orderId, status: userData.orderStatus })
     const restaurant = useSelector(state => state?.user?.data?.user?.restaurant)
@@ -39,8 +40,14 @@ const OrderSummery = () => {
         }
     }
     useEffect(() => {
-        updateOrderStatus()
+        if(statusFetch){
+            updateOrderStatus()
+        }else{
+            setStatusFetch(true)
+        }
     }, [status])
+
+
 
     useEffect(() => {
         getOrderSummery()

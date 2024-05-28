@@ -17,8 +17,6 @@ const userDetails = async ()=>{
 }
 
 const logOut = async () => {
-  // await axios.post(`${BASE_URL}/api/v1/users/logout`, {}, {headers:{Authorization: localStorage.getItem('AccessToken')}})
-  // // console.log(res.data);
   
   try {
     return await apiConnector("POST", userEndPoint.LOGOUT, {}, {Authorization: localStorage.getItem('AccessToken')})
@@ -30,8 +28,6 @@ const logOut = async () => {
 
 const signUp = async ({formData}) => {
   try {
-    // const res = await axios.post(`${BASE_URL}/api/v1/restaurant/register-restaurant`, {data:JSON.stringify(formData)})
-    // console.log(res);
     const res = await apiConnector("POST", userEndPoint.REGISTER, JSON.stringify(formData))
     if(res.data.status === 201){
       return {status:true}

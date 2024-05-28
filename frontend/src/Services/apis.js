@@ -1,5 +1,5 @@
-// const BASE_URL = "/api/v1"
-const BASE_URL = "https://rms-csuw.onrender.com/api/v1";
+const BASE_URL = "/api/v1"
+// const BASE_URL = "https://rms-csuw.onrender.com/api/v1";
 
 const route = {
     ORDERS: BASE_URL + "/orders",

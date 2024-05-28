@@ -4,7 +4,6 @@ import { productEndPoint } from "../apis";
 
 
 const addCategory = async ({formData}) =>{
-    // const res = await axios.post(`${BASE_URL}/api/v1/products/add-category`,formData, {headers:{Authorization:localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
     try {
         const res = await apiConnector("POST", productEndPoint.ADD_CATEGORY, formData, {Authorization: localStorage.getItem('AccessToken'), "Content-Type":"multipart/form-data"} )
             console.log(res.data);
@@ -16,7 +15,6 @@ const addCategory = async ({formData}) =>{
 }
 
 const getCategory = async() =>{
-    // const res = await axios.get(`${BASE_URL}/api/v1/products/get-category`,{headers:{Authorization:localStorage.getItem("AccessToken")}})
     try {
         const res = await apiConnector("GET", productEndPoint.GET_CATEGORY, {}, {Authorization: localStorage.getItem('AccessToken')})
         console.log(res.data.data)
@@ -27,7 +25,6 @@ const getCategory = async() =>{
 }
 
 const addItem = async ({formData}) =>{
-    // const res = await axios.post(`${BASE_URL}/api/v1/products/add-items`,formData,{headers:{Authorization: localStorage.getItem("AccessToken"),"Content-Type":"multipart/form-data"}})
     try {
         const res = await apiConnector("POST", productEndPoint.ADD_ITEMS, formData, {Authorization: localStorage.getItem('AccessToken'), "Content-Type":"multipart/form-data"})
         return res.data.statusCode===201;
@@ -47,7 +44,6 @@ const getItems  =async () => {
 }
 
 const getItemDetails = async ({id}) => {
-    // const res = await axios.get(`${BASE_URL}/api/v1/products/edit?id=${id}`, { headers: { Authorization: localStorage.getItem('AccessToken')}, })
     try {
         const res = await apiConnector("GET", productEndPoint.EDIT_ITEM,{}, {Authorization: localStorage.getItem('AccessToken')}, {id})
         return res.data.data

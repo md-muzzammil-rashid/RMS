@@ -6,11 +6,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 
 const createRestaurant = asyncHandler(async (req, res, next)=>{
-    console.log('api hit');
     const data = JSON.parse(req.body.data);
     const { restaurantName, restaurantCode, restaurantEmail, username, fullName, email, password, confirmPassword } = data
 
-    console.log( restaurantName, restaurantCode, restaurantEmail, username, fullName, email, password, confirmPassword);
     if([ restaurantName, restaurantCode, restaurantEmail, username, fullName, email, password ].some(field=>field?.trim()===''||field?.trim()===null||field?.trim()===undefined)){
 
         res.status(400)
@@ -27,7 +25,6 @@ const createRestaurant = asyncHandler(async (req, res, next)=>{
             )
     }
 
-    console.log('01');
     const restaurantExisted = await RestaurantModel.findOne({restaurantCode:restaurantCode})
     if(restaurantExisted){
         
@@ -38,21 +35,17 @@ const createRestaurant = asyncHandler(async (req, res, next)=>{
         // throw new ApiError(409, "User already existed with same username or email")
     }
     
-    console.log('02');
     const restaurant = await RestaurantModel.create({
         restaurantName:restaurantName,
         restaurantCode:restaurantCode,
         restaurantEmail:restaurantEmail
     }
 )
-console.log(restaurant);
 
-console.log('03');
 if(!restaurant){
     throw new ApiError(500, "Failed to Register Restaurant")
 }
 
-console.log('04');
 const user = await UserModel.create({
     fullName,
     username,
@@ -61,19 +54,16 @@ const user = await UserModel.create({
     restaurant:restaurant._id,
     softwareManagement:{isAdmin:true}
 })
-console.log('05');
 if(!user){
     throw new ApiError(500, "Failed to create user")
 }
 
-console.log('06');
 const addEmployee = await RestaurantModel.findByIdAndUpdate(restaurant._id,{
     $push: {
         employees: user._id
     }
 })
 
-console.log('07');
     const registeredRestaurant = await RestaurantModel.findById(restaurant._id).populate('employees')
     return res.status(200)
     .json(

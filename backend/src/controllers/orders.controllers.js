@@ -1,4 +1,5 @@
 import { RestaurantModel } from "../models/Restaurant.models.js";
+import { io } from "../socket/socket.js";
 import ApiError from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -15,7 +16,10 @@ const submitOrder = asyncHandler(async (req, res, next) => {
   if (!orderSummery) {
     throw new ApiError(500, "Unable to make order")
   }
-  console.log(orderSummery);
+
+  console.log('new order notification triggered');
+  io.to(user.id).emit("newOrder",orderSummery)
+
   res.status(201)
     .json(new ApiResponse(201, "Order Success", orderSummery))
 })
@@ -37,7 +41,7 @@ const orderHistory = asyncHandler(async (req, res, next) => {
   const currentDate = new Date()
   const fromDate = req.query.fromDate || "1990-01-01T00:00:00.000Z"
   const toDate = req.query.toDate || currentDate.toISOString()
-  console.log(currentDate.toISOString());
+  // console.log(currentDate.toISOString());
   ///////////////////////////////////////
   const orders = await RestaurantModel.aggregate(
 
@@ -90,7 +94,6 @@ const orderHistory = asyncHandler(async (req, res, next) => {
       }
     ]
   )
-  ///////////////////////////////////////
 
 
 
@@ -115,6 +118,10 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
       new: true
     }
   )
+
+  io.to(user.id).emit('orderStatusUpdated', user)
+
+
   res.status(200)
     .json(
       new ApiResponse(200, "Updated", user)

@@ -35,18 +35,18 @@ const Dashboard = () => {
   
 const getMonthlySalesNumberReport=async()=>{
   try {
-    // const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
     const res = await getMonthlySalesNumber()
     setMonthlySalesNumber(res)
-
+    
   } catch (error) {
-   console.log(error);
+    console.log(error);
   }
 }
 const getDailySalesNumberReport=async()=>{
   try {
     const res = await getDailySalesNumber()
     setDailySalesNumber(res)
+    console.log(res);
   } catch (error) {
     if(error.response.status===401){
       navigate('/login')
@@ -118,7 +118,7 @@ useEffect(()=>{
               chartType='PieChart'
               width={'100%'}
               height={'400px'}
-              options={{ title: "Most Selling Products", pieHole: 0.4 }}
+              options={{ title: "Most Selling Products", pieHole: 0.4,  }}
               data={mostSellingProduct}
 
 
@@ -130,8 +130,8 @@ useEffect(()=>{
               className='pt-7'
               width={'100%'}
               height={'400px'}
-              options={{ title: "Most Selling Products (Revenue)", hAxis: { title: 'Products' }, vAxis: { title: 'Revenue' }, colors: ['white'] }}
               data={mostSellingProductRevenue}
+              options={{ title: "Most Selling Products (Revenue)", hAxis: { title: 'Products' }, vAxis: { title: 'Revenue' }, colors: ['white'] }}
 
 
             />

@@ -64,7 +64,6 @@ const generateAccessAndRefreshToken = async function (userId) {
 
 const loginUser = asyncHandler(async function (req, res, next) {
     const { usernameORemail, password } = req.body
-    console.log(usernameORemail, password);
 
     if([usernameORemail, password].some((field)=>field?.trim()== null ||field?.trim()==  undefined || field?.trim()== ''  )){
     // throw new ApiError(401, 'All Fields are required')

@@ -21,6 +21,7 @@ export const userSlice = createSlice({
             state.data = []
             state.message = action.payload?.message
             state.status = STATUS.IDLE
+            state.token = null
         },
         getUserInfo:(state, action)=>{
             console.log("getting user Info");

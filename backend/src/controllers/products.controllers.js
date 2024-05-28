@@ -7,12 +7,12 @@ import asyncHandler from "../utils/asyncHandler.js";
 const addCategory = asyncHandler(async (req, res, next)=>{
     const restaurant = await RestaurantModel.findById(req.user.restaurant);
     const {category} = req.body
-    console.log(category);
-    console.log(req.file);
+    // console.log(category);
+    // console.log(req.file);
     const imgPath = req.file.path
     const catImg = await uploadOnCloudinary(imgPath) 
 
-    console.log(catImg);
+    // console.log(catImg);
     const categoryImage = catImg.url;
 
     restaurant.productCategory.push({categoryImage, category})    
@@ -43,7 +43,7 @@ const addItems = asyncHandler(async(req,res)=>{
     
     const itemImg = await uploadOnCloudinary(req.file.path)
     const itemImgLink = itemImg.url
-    console.log(category);
+    // console.log(category);
     // const categoryArray = [];
     
 
@@ -66,7 +66,7 @@ const getItems = asyncHandler(async(req, res, next)=>{
 
 const getItemDetail = asyncHandler(async (req, res, next)=>{
     const {id} = req.query
-    console.log(id);
+    // console.log(id);
     const item = await RestaurantModel.findOne({_id:req.user.restaurant ,'items._id':id},{'items.$':1})
     if(!item){
         throw new ApiError(404, 'Item not Found')
@@ -85,7 +85,7 @@ const editItemDetail = asyncHandler(async (req, res, next)=>{
     variants?.forEach(item=>{
         variantsJSON.push(JSON.parse(item))
     })
-    console.log(category);
+    // console.log(category);
     // console.log(id,itemName, itemId, variants, category:category.split(','),isAvailable);
     const updatedItem = await RestaurantModel.findOneAndUpdate({_id:req.user.restaurant,'items._id':id},
         {

@@ -1,8 +1,10 @@
-import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import express from 'express'
+import { app, server  } from "./socket/socket.js";
 
-const app = express();
+// const app = express()
+
 
 app.use(cookieParser())
 app.use(express.json())
@@ -17,6 +19,7 @@ import orderRoute from "./routes/orders.routes.js"
 import reportRoute from './routes/reports.routes.js'
 import restaurantRoute from './routes/restaurant.routes.js'
 import asyncHandler from "./utils/asyncHandler.js";
+import connectDB from "./db/index.js";
 
 app.get('/', asyncHandler(async(req, res, next)=>{
         res.status(200)
@@ -33,7 +36,12 @@ app.use("/api/v1/orders", orderRoute)
 
 app.use("/api/v1/reports", reportRoute)
 
+// export default app
 
-
-
-export default app
+export const startServer =() =>{
+        connectDB().then(()=>{
+            server.listen(process.env.PORT || 6010,()=>{
+            console.log("Server is running at PORT : ",process.env.PORT)
+            })
+        })
+}

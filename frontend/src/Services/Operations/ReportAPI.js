@@ -38,7 +38,6 @@ const getMostSellingProduct = async ({mostSellingProductDateRange}) => {
 
   const getDailySales = async ({dailySalesDateRange}) => {
     try {
-    //   const res = await axios.get(`${BASE_URL}/api/v1/reports/daily-sales?day=${dailySalesDateRange}`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
     const res = await apiConnector("GET", reportEndPoint.DAILY_SALES, {}, {Authorization: localStorage.getItem('AccessToken')}, {day:dailySalesDateRange})
   
       const convertedDailySalesData = [['Day', 'Revenue', 'TotalRevenue']]
@@ -59,7 +58,6 @@ const getMostSellingProduct = async ({mostSellingProductDateRange}) => {
 
   const getMonthlySalesNumber=async()=>{
     try {
-    //   const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?type=m`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
     const res = await apiConnector("GET", reportEndPoint.TOTAL_SALES, {}, {Authorization: localStorage.getItem('AccessToken')}, {type:"m"})
     return res.data.data[0]
     } catch (error) {
@@ -69,11 +67,10 @@ const getMostSellingProduct = async ({mostSellingProductDateRange}) => {
 
     const getDailySalesNumber=async()=>{
         try {
-        //   const res = await axios.get(`${BASE_URL}/api/v1/reports/total-sales?`, { headers: { Authorization: localStorage.getItem('AccessToken') } })
-          const res = await apiConnector("GET", reportEndPoint.TOTAL_SALES, {Authorization:localStorage.getItem('AccessToken')})
-        //   console.log(res.data.data);
+          const res = await apiConnector("GET", reportEndPoint.TOTAL_SALES,{},{Authorization:localStorage.getItem('AccessToken')})
           return res.data.data[0]
         } catch (error) {
+          console.log(error);
           return false
           }
       }

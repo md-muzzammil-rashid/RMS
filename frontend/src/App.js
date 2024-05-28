@@ -28,6 +28,7 @@ function App() {
   useEffect(()=>{
     console.log('getting user infor 1');
     dispatch(getUserInfo())
+    
   },[])
   return (
  <BrowserRouter>

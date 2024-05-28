@@ -4,7 +4,7 @@ import { CiMemoPad } from 'react-icons/ci'
 import { IoIosLogOut, IoIosRestaurant, IoMdLogOut, IoMdSettings } from "react-icons/io";
 import { RiTodoFill } from "react-icons/ri";
 import Logo from "../../Assets/images/logo.png"
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../Services/Operations/AuthAPI';
 import { resetLogin } from '../../redux/reducers/userSlice';
@@ -26,11 +26,14 @@ const Navbar = () => {
     const restaurant = useSelector(state=>state?.user?.data?.user?.restaurant)
 
     const handleLogout = async ()=>{
-        const res =  await logOut()
-        console.log('success');
-        dispatch(resetLogin({message:'Logout Successful'}))
+        const res =  await logOut().then(()=>{
+            console.log('success');
+            dispatch(resetLogin({message:'Logout Successful'}))
+
+        })
         localStorage.clear()
-        navigate('login')
+        // navigate('login')
+        // Navigate({to:'/login'})
     }
     
 
