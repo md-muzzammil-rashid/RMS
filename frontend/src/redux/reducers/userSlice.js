@@ -14,7 +14,8 @@ export const userSlice = createSlice({
         status: "",
         data: [],
         message: '',
-        token: null
+        token: null,
+        restaurantId:null
     },
     reducers: {
         resetLogin: (state, action) => {
@@ -22,13 +23,18 @@ export const userSlice = createSlice({
             state.message = action.payload?.message
             state.status = STATUS.IDLE
             state.token = null
+            state.restaurantId = null
+            localStorage.clear()
         },
         getUserInfo:(state, action)=>{
             console.log("getting user Info");
+            const localStorageData = JSON.parse(localStorage.getItem('UserData'))
             state.status = STATUS.IDLE
-                state.data = JSON.parse(localStorage.getItem('UserData'))
+                state.data = localStorageData
                 state.message = action.payload?.message
                 state.token = action.payload?.data?.AccessToken
+                state.restaurantId = localStorageData.user.restaurant._id
+                localStorage.setItem('restaurantId', localStorageData.user.restaurant._id)
         },
         setUserDetails: (state, action) => {
             state.status = STATUS.SUCCESS
@@ -98,28 +104,26 @@ export const userSlice = createSlice({
 
 
 export const LoginUser = createAsyncThunk('user/data', async (formData, {rejectWithValue}) => {
-            // const res = await axios.post(`${BASE_URL}/api/v1/users/login`, { usernameORemail: formData.usernameORemail, password: formData.password })
 
             const res = await logIn({usernameORemail: formData.usernameORemail, password: formData.password})
-            // .catch((err)=>( extractErrorMessage(err.response.data)))
 
             if (res.statusCode === 202) {
                 
                         localStorage.setItem("AccessToken", res.data.AccessToken)
+                        localStorage.setItem("restaurantId", res.data.user.restaurant._id)
                         localStorage.setItem("RefreshToken", res.data.RefreshToken)
                         localStorage.setItem('UserData', JSON.stringify(res.data))
                         console.log(localStorage.getItem("AccessToken"));
                     }
                     return res
-            // console.log('error is: ', extractErrorMessage(error.response.data));
-            // return rejectWithValue(extractErrorMessage(error.response.data))
-            // throw error        }
+
 
             })
 
 export const getUserData = createAsyncThunk  ('user/details', async(data, {rejectWithValue})=>{
     const res = await  userDetails()
     if(res.statusCode === 200)
+        console.log(res);
     return res
 }) 
 

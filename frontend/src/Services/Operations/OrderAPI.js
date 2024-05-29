@@ -39,8 +39,22 @@ const orderSummery = async({orderId})=>{
 }
 
 const updateOrderStatusFromDB = async ({orderId, status})=>{
-    const res = await apiConnector("POST", orderEndPoint.UPDATE_ORDER_STATUS+orderId, status, {Authorization: localStorage.getItem('AccessToken')})
-    return true;
+    try {
+        const res = await apiConnector("POST", orderEndPoint.UPDATE_ORDER_STATUS+orderId, status, {Authorization: localStorage.getItem('AccessToken')})
+        console.log(res);
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const incompleteOrders = async () => {
+    try {
+        const res = await apiConnector("GET", orderEndPoint.INCOMPLETE_ORDERS, {}, {Authorization: localStorage.getItem('AccessToken')})
+        return res.data.data
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -49,5 +63,6 @@ export{
     submitOrder,
     getOrderHistory,
     orderSummery,
-    updateOrderStatusFromDB
+    updateOrderStatusFromDB,
+    incompleteOrders
 }

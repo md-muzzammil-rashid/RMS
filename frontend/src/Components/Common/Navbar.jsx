@@ -26,7 +26,7 @@ const Navbar = () => {
     const restaurant = useSelector(state=>state?.user?.data?.user?.restaurant)
 
     const handleLogout = async ()=>{
-        const res =  await logOut().then(()=>{
+        await logOut().then(()=>{
             console.log('success');
             dispatch(resetLogin({message:'Logout Successful'}))
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
-import { getOrderSummery, orderHistory, submitOrder, updateOrderStatus } from "../controllers/orders.controllers.js";
+import { getOrderSummery, incompleteOrders, orderHistory, submitOrder, updateOrderStatus } from "../controllers/orders.controllers.js";
 
 
 const router = Router()
@@ -16,6 +16,9 @@ router.route("/order-history")
 
 router.route('/update-order-status/:orderId')
     .post(verifyJWT, updateOrderStatus)
+
+router.route('/incomplete-orders')
+    .get(verifyJWT, incompleteOrders)
 
 // router.route('/get-sales-report')
 //     .get(verifyJWT, salesReport)

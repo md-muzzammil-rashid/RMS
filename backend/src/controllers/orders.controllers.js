@@ -118,17 +118,60 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
       new: true
     }
   )
+  const data = user.orders.filter((item) => item._id == orderId)
 
-  io.to(user.id).emit('orderStatusUpdated', user)
+  io.to(user.id).emit('orderStatusUpdated', data)
 
 
   res.status(200)
     .json(
-      new ApiResponse(200, "Updated", user)
+      new ApiResponse(200, "Updated", data[0])
     )
 })
 
+const incompleteOrders = asyncHandler(async (req, res) => {
+  const restaurant = await RestaurantModel.aggregate([
+    {
+      '$match': {
+        '_id': req.user.restaurant
+      }
+    }, {
+      '$unwind': {
+        'path': '$orders'
+      }
+    }, {
+      '$match': {
+        '$and': [
+          {
+            'orders.orderStatus': {
+              '$ne': 'Completed'
+            }
+          }, {
+            'orders.orderStatus': {
+              '$ne': 'Cancelled'
+            }
+          }
+        ]
+      }
+    }, {
+      '$group': {
+        '_id': null, 
+        'orders': {
+          '$push': '$orders'
+        }
+      }
+    }
+  ])
 
+ if(!restaurant){
+  throw new ApiError(500, "Unable to fetch incomplete orders")
+ }
+  return res.status(200)
+        .json(
+          new ApiResponse(200, "Fetched", restaurant[0]?.orders)
+        )
+                    
+})
 
 
 export {
@@ -136,4 +179,5 @@ export {
   getOrderSummery,
   orderHistory,
   updateOrderStatus,
+  incompleteOrders
 }

@@ -6,7 +6,6 @@ const ACCESS_TOKEN = localStorage.getItem("AccessToken")
 
 const userDetails = async ()=>{
   try {
-    //   const res = await axios.get(`${BASE_URL}/api/v1/users/user-details`,{headers:{Authorization: localStorage.getItem('AccessToken')}})
     const res = await apiConnector("GET", userEndPoint.USER_DETAILS, {}, {Authorization: localStorage.getItem('AccessToken')} )
     console.log("res is :", res);
     return res.data

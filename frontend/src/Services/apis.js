@@ -12,7 +12,8 @@ const orderEndPoint = {
     SUBMIT_ORDER :  route.ORDERS+"/submit-order",
     ORDER_SUMMERY :  route.ORDERS+"/order-summery/",
     ORDER_HISTORY :  route.ORDERS+"/order-history",
-    UPDATE_ORDER_STATUS :  route.ORDERS+"/update-order-status/"
+    UPDATE_ORDER_STATUS :  route.ORDERS+"/update-order-status/",
+    INCOMPLETE_ORDERS :  route.ORDERS + "/incomplete-orders"
 
 }
 

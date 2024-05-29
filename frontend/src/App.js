@@ -21,6 +21,7 @@ import { getUserInfo } from './redux/reducers/userSlice';
 import AddEmployee from './Pages/AddEmployee';
 import ProtectedRoute from './Components/Core/Auth/ProtectedRoute';
 import LoggedInRoute from './Components/Core/Auth/LoggedInRoute';
+import KitchenDisplaySystem from './Pages/KitchenDisplaySystem';
 
 function App() {
   const dispatch = useDispatch()
@@ -45,6 +46,7 @@ function App() {
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path='/orders' element={<ProtectedRoute><Order /></ProtectedRoute>} />
+            <Route path='/orders/kitchen' element={<ProtectedRoute><KitchenDisplaySystem/></ProtectedRoute>} />
             <Route path='/sales' element={<ProtectedRoute><Order /></ProtectedRoute>} />
             <Route path='/setting/' element={<ProtectedRoute><Setting /></ProtectedRoute>} >
               <Route index element={<ProtectedRoute><PersonalInfo/></ProtectedRoute>}/>
