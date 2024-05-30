@@ -12,34 +12,34 @@ const Layout = () => {
 
   // const socket = useSelector(state=>state.socket.socket)
   
-  useEffect(()=>{
-    const socket = io('http://192.168.77.81:5005/', {
-    query:{
-      restaurantId : localStorage.getItem('restaurantId'),
-      userId : userId
-    }
+  // useEffect(()=>{
+  //   const socket = io('http://192.168.77.81:5005/', {
+  //   query:{
+  //     restaurantId : localStorage.getItem('restaurantId'),
+  //     userId : userId
+  //   }
   
-  }
-  )
+  // }
+  // )
     
-  socket?.on('newOrder', (data)=>{
-    console.log("new Order:", data);
-    toast.success('New Order Created')
-  })
+  // socket?.on('newOrder', (data)=>{
+  //   console.log("new Order:", data);
+  //   toast.success('New Order Created')
+  // })
 
-  socket?.on('connect', ()=>{
-    console.log("connected with socketId :", socket.id);
-  })
+  // socket?.on('connect', ()=>{
+  //   console.log("connected with socketId :", socket.id);
+  // })
 
-  socket?.on('orderStatusUpdated', (data)=>{
-    toast.success('Order Status Updated')
-    console.log("order status updated",data);
-  })
+  // socket?.on('orderStatusUpdated', (data)=>{
+  //   toast.success('Order Status Updated')
+  //   console.log("order status updated",data);
+  // })
 
-  return ()=> socket.close()
+  // return ()=> socket.close()
 
 
-  },[userId,])
+  // },[userId,])
 
   return (
     <div className='pl-72 '>

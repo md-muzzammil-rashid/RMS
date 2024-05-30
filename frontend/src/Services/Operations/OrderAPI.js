@@ -41,8 +41,7 @@ const orderSummery = async({orderId})=>{
 const updateOrderStatusFromDB = async ({orderId, status})=>{
     try {
         const res = await apiConnector("POST", orderEndPoint.UPDATE_ORDER_STATUS+orderId, status, {Authorization: localStorage.getItem('AccessToken')})
-        console.log(res);
-        return res;
+        return res.data.data;
     } catch (error) {
         console.log(error);
     }

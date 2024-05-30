@@ -22,9 +22,11 @@ import AddEmployee from './Pages/AddEmployee';
 import ProtectedRoute from './Components/Core/Auth/ProtectedRoute';
 import LoggedInRoute from './Components/Core/Auth/LoggedInRoute';
 import KitchenDisplaySystem from './Pages/KitchenDisplaySystem';
+import useSocket from './hooks/useSocket';
 
 function App() {
   const dispatch = useDispatch()
+  const socket = useSocket()
  
   useEffect(()=>{
     console.log('getting user infor 1');

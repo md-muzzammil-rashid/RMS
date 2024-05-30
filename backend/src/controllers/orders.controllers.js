@@ -120,7 +120,7 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
   )
   const data = user.orders.filter((item) => item._id == orderId)
 
-  io.to(user.id).emit('orderStatusUpdated', data)
+  io.to(user.id).emit('orderStatusUpdated', data[0])
 
 
   res.status(200)

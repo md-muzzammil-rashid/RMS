@@ -5,19 +5,21 @@ const socketSlice = createSlice({
     name:'socket',
 
     initialState:{
-        socket:null,
-        onlineUser:[]
+        order:0,
+        status:0
 
     },
     reducers:{
-        setSocket:(state, action)=>{
-            state.socket = action.payload;
-
+        updateOrderSocket:(state, action)=>{
+            state.order = state.order+1;
+        },
+        updateStatusSocket:(state, action)=>{
+            state.status = state.status+1;
         }
 
     },
 
 })
 
-export const {setSocket} = socketSlice.actions;
+export const {updateOrderSocket, updateStatusSocket} = socketSlice.actions;
 export default socketSlice.reducer;

@@ -3,7 +3,6 @@ import ItemDetailsKDS from './ItemDetailsKDS'
 import ItemCardKDS from './ItemCardKDS'
 import ItemStatus from './ItemStatus'
 import { orderSummery, updateOrderStatusFromDB } from '../../../Services/Operations/OrderAPI'
-import { ThreeDots } from 'react-loader-spinner'
 
 
 
@@ -12,7 +11,6 @@ const KitchenDisplayCard = ({customerData}) => {
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState(customerData)
     const [statusFetch, setStatusFetch] = useState(false)
-    const [statusColor, setStatusColor] = useState('bg-blue-500')
     const [status, setStatus] = useState({ orderId, status: customerData?.orderStatus })
 
     const getOrderSummery =async () => {
@@ -31,7 +29,8 @@ const KitchenDisplayCard = ({customerData}) => {
     const updateOrderStatus = async () => {
         const res =await updateOrderStatusFromDB({ orderId, status })
         if (res) {
-            getOrderSummery()
+            // getOrderSummery()
+            setUserData(res)
         }
     }
     
@@ -42,12 +41,12 @@ const KitchenDisplayCard = ({customerData}) => {
             setStatusFetch(true)
         }
     }, [status])
-
-    useEffect(()=>{
-        if(statusFetch){
-            getOrderSummery()
-        }
-    },[userData])
+    
+    // useEffect(()=>{
+    //     if(statusFetch){
+    //         getOrderSummery()
+    //     }
+    // },[orderId])
 
 
 
