@@ -1,6 +1,7 @@
-const BASE_URL = "/api/v1"
-// const BASE_URL = "https://rms-csuw.onrender.com/api/v1";
-const SOCKET_URL = 'http://192.168.77.81:5005/'
+// const BASE_URL = "/api/v1"
+const BASE_URL = "https://rms-csuw.onrender.com/api/v1";
+const SOCKET_URL = "https://rms-csuw.onrender.com/";
+// const SOCKET_URL = 'http://192.168.77.81:5005/'
 
 const route = {
     ORDERS: BASE_URL + "/orders",
