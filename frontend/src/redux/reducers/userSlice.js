@@ -33,8 +33,8 @@ export const userSlice = createSlice({
                 state.data = localStorageData
                 state.message = action.payload?.message
                 state.token = action.payload?.data?.AccessToken
-                state.restaurantId = localStorageData.user.restaurant._id
-                localStorage.setItem('restaurantId', localStorageData.user.restaurant._id)
+                state.restaurantId = localStorageData?.user?.restaurant?._id
+                localStorage.setItem('restaurantId', localStorageData?.user?.restaurant?._id)
         },
         setUserDetails: (state, action) => {
             state.status = STATUS.SUCCESS
