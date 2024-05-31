@@ -9,7 +9,14 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use(express.static('public'))
-app.use(cors())
+app.use(cors(
+        {
+                origin: ["http://localhost:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app"],
+                methods: ["GET", "POST"],
+                allowedHeaders: ["Content-Type", "Authorization"],
+                credentials: true,
+        }
+))
 
 
 //importing routes

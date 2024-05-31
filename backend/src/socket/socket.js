@@ -11,7 +11,9 @@ const server = http.createServer(app);
 const io = new Server(server , {
     cors: {
         origin: ["http://localhost:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app"],
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
     }
 });
 
