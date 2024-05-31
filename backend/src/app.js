@@ -5,7 +5,11 @@ import { app, server  } from "./socket/socket.js";
 
 // const app = express()
 
-
+app.use(cookieParser())
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
+app.use(express.static('public'))
+app.use(cors())
 
 
 //importing routes
