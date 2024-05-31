@@ -10,7 +10,7 @@ const server = http.createServer(app);
 // Wrap the server with Socket.io Server
 const io = new Server(server , {
     cors: {
-        origin: ["*","http://localhost:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app/"],
+        origin: ["http://localhost:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app"],
         methods: ["GET", "POST"]
     }
 });
