@@ -3,7 +3,7 @@ export const fillMissingDates = async (data, day=60) => {
     const dataMap = new Map();
     await data.forEach(entry => {
       const date = new Date(Date.UTC(`${entry._id.year}`,`${entry._id.month - 1}`,`${entry._id.day}`));
-      console.log(date,`${entry._id.year}`,`${entry._id.month }`,`${entry._id.day}`);
+      // console.log(date,`${entry._id.year}`,`${entry._id.month }`,`${entry._id.day}`);
       // const date = entry._id.date
       const dateStr = date.toISOString().split('T')[0].trim();
 
