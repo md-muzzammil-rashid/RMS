@@ -6,7 +6,7 @@ const LoggedInRoute = ({children}) => {
     const token = useSelector(state=>state?.user?.token|| state?.user?.data?.AccessToken)
     if(token){
         console.log("Token Found");
-        return <Navigate to={'/'}/>
+        return <Navigate to={'/dashboard'}/>
     }else{
         return children
     }

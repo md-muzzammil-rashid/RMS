@@ -50,7 +50,7 @@ const Navbar = () => {
                     <ul className='gap-y-5 flex flex-col'>
 
                         <li className='flex gap-2 w-full items-center justify-start'>
-                            <NavLink to={'/'} style={navLinkStyle} className='flex gap-2 hover:bg-white hover:bg-opacity-15 w-48 py-2 rounded-lg px-3  bg-opacity-30 items-center justify-start'>
+                            <NavLink to={'/dashboard'} style={navLinkStyle} className='flex gap-2 hover:bg-white hover:bg-opacity-15 w-48 py-2 rounded-lg px-3  bg-opacity-30 items-center justify-start'>
                                 <BsGrid1X2Fill /> Dashboard
                             </NavLink>
                         </li>

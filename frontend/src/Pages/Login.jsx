@@ -25,7 +25,7 @@ const Login = () => {
   
     useEffect(()=>{
       if (loginStatus === STATUS.SUCCESS){
-        navigate("/")
+        navigate("/dashboard")
       }
       
     },[formData, loginStatus])

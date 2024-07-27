@@ -27,7 +27,7 @@ const useSocket = () => {
         })
         
         socketRef.current?.on('connect', ()=>{
-            console.log("connected with socketId :", socketRef.current.id);
+            console.log("connected with socketId :", socketRef?.current?.id);
         })
         
         socketRef.current?.on('orderStatusUpdated', (data)=>{

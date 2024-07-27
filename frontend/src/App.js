@@ -23,10 +23,10 @@ import ProtectedRoute from './Components/Core/Auth/ProtectedRoute';
 import LoggedInRoute from './Components/Core/Auth/LoggedInRoute';
 import KitchenDisplaySystem from './Pages/KitchenDisplaySystem';
 import useSocket from './hooks/useSocket';
+import HomePage from './Pages/HomePage';
 
 function App() {
   const dispatch = useDispatch()
-  const socket = useSocket()
  
   useEffect(()=>{
     console.log('getting user infor 1');
@@ -41,12 +41,14 @@ function App() {
           {/* Separate routes with exact path for login to avoid rendering Navbar */}
           <Route path='/login' element={<LoggedInRoute><Login /></LoggedInRoute>} />
           <Route path='/signup' element={<LoggedInRoute><Signup /></LoggedInRoute>} />
+          <Route path='/' element={<HomePage/>} />
 
           {/* Introduce a layout component for common elements */}
           
 
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-            <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            {/* <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
+            <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path='/orders' element={<ProtectedRoute><Order /></ProtectedRoute>} />
             <Route path='/orders/kitchen' element={<ProtectedRoute><KitchenDisplaySystem/></ProtectedRoute>} />
             <Route path='/sales' element={<ProtectedRoute><Order /></ProtectedRoute>} />

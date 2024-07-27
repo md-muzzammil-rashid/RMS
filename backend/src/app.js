@@ -11,9 +11,9 @@ app.use(express.urlencoded({extended:false}))
 app.use(express.static('public'))
 app.use(cors(
         {
-                origin: ["http://localhost:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app"],
+                origin: ["http://localhost:3000","http://192.168.208.81:3000", "http://192.168.77.81:3000","https://rms-six-tan.vercel.app"],
                 methods: ["GET", "POST"],
-                allowedHeaders: ["Content-Type", "Authorization"],
+                allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"],
                 credentials: true,
         }
 ))

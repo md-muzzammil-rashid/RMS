@@ -29,6 +29,9 @@ io.on('connection', (socket)=> {
     const restaurantId = socket.handshake.query.restaurantId
 
     console.log('a user connected', socket.id);
+    console.log("*************  Socket Map  ***************");
+    console.log(userSocketMap);
+    console.log("*************  Socket Map End ***************");
     if(userId){
         userSocketMap[userId] = {socketId: socket.id, restaurantId: restaurantId};
         console.log(userSocketMap);
