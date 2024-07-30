@@ -1,6 +1,8 @@
 import React from 'react'
 import logo from '../../../Assets/images/logo-db.png'
+import { useNavigate } from 'react-router-dom'
 const NavBar = () => {
+  const navigate = useNavigate()
     
   return (
     <div className='w-full h-24 flex items-center sticky top-0 left-0 bg-white z-50 justify-evenly font-poppins'>
@@ -8,7 +10,7 @@ const NavBar = () => {
         <img src={logo} className=' h-14   object-cover'/>
         </div>
 
-        <button className='font-poppins border-[2px] h-11 rounded-md hover:bg-black hover:text-white transition-all border-black  w-36' >
+        <button onClick={()=>navigate('/login')} className='font-poppins border-[2px] h-11 rounded-md hover:bg-black hover:text-white transition-all border-black  w-36' >
             Login
         </button>
     </div>

@@ -27,6 +27,7 @@ import HomePage from './Pages/HomePage';
 
 function App() {
   const dispatch = useDispatch()
+  const socket = useSocket()
  
   useEffect(()=>{
     console.log('getting user infor 1');

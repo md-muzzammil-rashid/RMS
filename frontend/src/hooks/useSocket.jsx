@@ -13,6 +13,7 @@ const useSocket = () => {
     const dispatch = useDispatch()
 
     useEffect(()=>{
+        console.log("connetion to socket");
         socketRef.current = io(SOCKET_URL, {
             query: {
                 restaurantId : restaurantId,

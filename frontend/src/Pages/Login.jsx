@@ -41,7 +41,7 @@ const Login = () => {
                 loginStatusMessage? <span className='text-red-500 font-bold'>{loginStatusMessage}</span>:''
               }
               <input onChange={changeHandler} placeholder='Username or Email' type="text" name='usernameORemail' className='border-2 rounded-3xl w-72 px-4 py-2 focus:ring-white' />
-              <input onChange={changeHandler} type="text" placeholder='Password' name='password' className='border-2 w-72  px-4 py-2 rounded-3xl ' />
+              <input onChange={changeHandler} type="password" placeholder='Password' name='password' className='border-2 w-72  px-4 py-2 rounded-3xl ' />
               <button className='bg-red-600 text-white px-5 py-2 w-72 flex justify-center rounded-3xl' type="submit" onClick={()=>{formHandler(formData); setIsLoading(()=>(loginStatus===STATUS.ERROR)?false:loginStatus===STATUS.LOADING?true:'')}} value="submit" >{isLoading ? <TailSpin color='white ' strokeWidth={4} height={30}/> :'Submit'}</button>
 
               <div className='border-t-4 pt-4 text-center w-6/12'>
